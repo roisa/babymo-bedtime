@@ -1,0 +1,44 @@
+{
+  "appId": "id.babymo.bedtime",
+  "appName": "Tidur Yuk!",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "allowNavigation": [
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "cdnjs.cloudflare.com"
+    ]
+  },
+  "android": {
+    "buildOptions": {
+      "targetSdkVersion": 34,
+      "minSdkVersion": 23
+    },
+    "backgroundColor": "#04080F",
+    "allowMixedContent": false,
+    "captureInput": false
+  },
+  "ios": {
+    "backgroundColor": "#04080F",
+    "scrollEnabled": false,
+    "limitsNavigationsToAppBoundDomains": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1800,
+      "launchAutoHide": true,
+      "backgroundColor": "#04080F",
+      "showSpinner": false,
+      "androidSpinnerStyle": "none",
+      "iosSpinnerStyle": "none"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#04080F",
+      "overlaysWebView": true
+    },
+    "Haptics": {}
+  }
+}
