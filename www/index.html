@@ -7,595 +7,739 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Tidur Yuk!">
-<link rel="manifest" href="manifest.json">
 <title>Tidur Yuk! 🌙</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;}
 :root{
-  --bg:#04080F;--bg2:#080F1C;--surface:#0D1629;--card:#111F3A;--border:#172444;
-  --blue:#4A78FF;--blue-soft:#7EA5FF;--teal:#3ECFB8;--teal-soft:#6EE7D4;
-  --gold:#FFD166;--purple:#A97FFF;--text:#B8CCEE;--text2:#5A7099;--text3:#2C3F60;
-  --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
+  --bg:#04080F;--card:#0D1629;--card2:#111F3A;--border:#172444;
+  --teal:#3ECFB8;--gold:#FFD166;--purple:#A97FFF;--blue:#4A78FF;
+  --red:#FF7B72;--green:#6EE7C0;
+  --text:#B8CCEE;--muted:#5A7099;--dim:#2C3F60;
 }
-html,body,#root{width:100%;height:100%;overflow:hidden;position:fixed;inset:0;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;}
-#root{display:flex;flex-direction:column;}
-@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:.9;transform:scale(1.3)}}
-@keyframes moonFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
-@keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 14px rgba(255,209,102,.35))}50%{filter:drop-shadow(0 0 40px rgba(255,209,102,.75))}}
-@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes bounceIn{0%{opacity:0;transform:scale(.25) rotate(-18deg)}55%{transform:scale(1.2) rotate(6deg)}80%{transform:scale(.92) rotate(-3deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
-@keyframes ringPulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(3);opacity:0}}
-@keyframes wave{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1.25)}}
-@keyframes floatUp{0%{opacity:.6;transform:translateY(0)}100%{opacity:0;transform:translateY(-44px)}}
-@keyframes checkPop{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.35) rotate(8deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+html,body{width:100%;height:100%;overflow:hidden;position:fixed;inset:0;
+  background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;touch-action:none;}
+/* SCREENS */
+.screen{display:none;position:fixed;inset:0;flex-direction:column;overflow:hidden;}
+.screen.on{display:flex;}
+/* STARS */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:#D4E8FF;}
+/* ANIMATIONS */
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.7)}50%{opacity:.9;transform:scale(1.4)}}
+@keyframes mf{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+@keyframes mg{0%,100%{filter:drop-shadow(0 0 14px rgba(255,209,102,.3))}50%{filter:drop-shadow(0 0 44px rgba(255,209,102,.8))}}
+@keyframes br{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+@keyframes fu{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bi{0%{opacity:0;transform:scale(.2) rotate(-20deg)}60%{transform:scale(1.2) rotate(7deg)}85%{transform:scale(.93) rotate(-3deg)}100%{opacity:1;transform:scale(1)}}
+@keyframes rp{0%{transform:scale(1);opacity:.6}100%{transform:scale(3.5);opacity:0}}
+@keyframes wv{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1.3)}}
+@keyframes fl{0%{opacity:.6;transform:translateY(0)}100%{opacity:0;transform:translateY(-46px)}}
 @keyframes shine{0%,100%{background-position:200% center}50%{background-position:-200% center}}
-@keyframes starDrift{from{transform:translateY(0)}to{transform:translateY(-16px)}}
+/* DOTS PROGRESS */
+.dots{display:flex;gap:8px;justify-content:center;padding:18px 0 6px;position:relative;z-index:2;}
+.dot{height:8px;border-radius:99px;width:8px;background:var(--border);transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+.dot.done{background:var(--teal);}
+.dot.act{width:28px;background:var(--blue);box-shadow:0 0 12px rgba(74,120,255,.7);}
+/* STEP HEADER */
+.shd{padding:14px 28px 0;text-align:center;position:relative;z-index:2;}
+.shd .sl{font-size:11px;font-weight:800;color:var(--dim);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:5px;}
+.shd .st{font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;color:var(--text);line-height:1.2;margin-bottom:4px;}
+.shd .ss{font-size:14px;color:var(--muted);line-height:1.5;}
+/* BUTTONS */
+.bigbtn{background:linear-gradient(135deg,#3A64F0,#6B94FF);border:none;border-radius:100px;
+  padding:18px 52px;font-family:'Nunito',sans-serif;font-size:19px;font-weight:900;
+  color:#fff;cursor:pointer;display:block;margin:0 auto;
+  box-shadow:0 8px 36px rgba(74,120,255,.45),0 2px 8px rgba(0,0,0,.4);
+  animation:br 3s ease-in-out infinite;touch-action:manipulation;}
+/* PROGRESS BAR */
+.pbar-wrap{background:var(--border);border-radius:99px;height:7px;overflow:hidden;}
+.pbar{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--teal),#6EE7D4);transition:width .3s ease;width:0%;}
+/* BLANKET */
+.blanket{position:absolute;left:0;right:0;bottom:0;}
+.blanket-body{position:absolute;inset:0;background:linear-gradient(160deg,#1A3060,#142850 30%,#1E376A 60%,#142850);overflow:hidden;}
+.blanket-pattern{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0,rgba(255,255,255,.025) 12px,transparent 12px,transparent 24px);}
+.blanket-fold{position:absolute;top:0;left:0;right:0;height:18px;
+  background:linear-gradient(135deg,#2A50A0,#1E3A80);border-radius:2px 2px 0 0;
+  border-bottom:1px solid rgba(255,255,255,.08);}
+.blanket-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:46px;height:5px;border-radius:99px;background:rgba(126,165,255,.55);
+  box-shadow:0 0 12px rgba(126,165,255,.4);}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel" data-presets="react">
-const {useState,useEffect,useRef,useCallback,useMemo,memo}=React;
 
-function vibrate(ms=40){try{navigator.vibrate?.(ms);}catch(e){}}
+<!-- STARS -->
+<div id="stars"></div>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div id="s-home" class="screen on">
+  <div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:linear-gradient(170deg,#04080F,#060C18 50%,#08101E);position:relative;overflow:hidden;">
+    <div style="position:absolute;bottom:0;left:0;right:0;height:38%;
+      background:radial-gradient(ellipse 80% 60% at 50% 120%,rgba(12,30,70,.5),transparent 70%);pointer-events:none;"></div>
+    <div id="home-content" style="position:relative;z-index:2;text-align:center;padding:28px 36px;opacity:0;transform:translateY(28px);transition:all .9s cubic-bezier(.34,1.56,.64,1);">
+      <div style="font-size:100px;line-height:1;margin-bottom:22px;animation:mf 4.5s ease-in-out infinite,mg 3.5s ease-in-out infinite;">🌙</div>
+      <div style="font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-bottom:10px;">Baby Mo · Ritual Malam</div>
+      <h1 style="font-family:'Baloo 2',cursive;font-size:40px;font-weight:800;line-height:1.15;color:var(--text);margin-bottom:10px;letter-spacing:-1px;">Waktunya<br>Tidur! ✨</h1>
+      <p style="font-size:15px;color:var(--muted);line-height:1.6;max-width:260px;margin:0 auto 44px;">Yuk ikuti 4 langkah malam<br>bersama Baby Mo 🌟</p>
+      <button class="bigbtn" id="start-btn">Mulai Tidur 🌙</button>
+      <div style="display:flex;gap:24px;justify-content:center;margin-top:38px;">
+        <div style="text-align:center;opacity:.45;animation:fu .5s .15s ease both;"><div style="font-size:24px;margin-bottom:4px;">🪥</div><div style="font-size:10px;font-weight:700;color:var(--dim);">Gosok Gigi</div></div>
+        <div style="text-align:center;opacity:.45;animation:fu .5s .25s ease both;"><div style="font-size:24px;margin-bottom:4px;">👕</div><div style="font-size:10px;font-weight:700;color:var(--dim);">Ganti Baju</div></div>
+        <div style="text-align:center;opacity:.45;animation:fu .5s .35s ease both;"><div style="font-size:24px;margin-bottom:4px;">🤲</div><div style="font-size:10px;font-weight:700;color:var(--dim);">Baca Doa</div></div>
+        <div style="text-align:center;opacity:.45;animation:fu .5s .45s ease both;"><div style="font-size:24px;margin-bottom:4px;">💤</div><div style="font-size:10px;font-weight:700;color:var(--dim);">Tidur</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ STEP CONTAINER ═══════════════ -->
+<div id="s-steps" class="screen">
+  <div style="height:100%;display:flex;flex-direction:column;
+    background:linear-gradient(170deg,#04080F,#080F1C 60%,#0A1228);position:relative;">
+    <div class="dots" id="step-dots">
+      <div class="dot act" data-i="0"></div>
+      <div class="dot" data-i="1"></div>
+      <div class="dot" data-i="2"></div>
+      <div class="dot" data-i="3"></div>
+    </div>
+    <div id="step-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding-bottom:20px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ SLEEP MODE ═══════════════ -->
+<div id="s-sleep" class="screen">
+  <div style="position:absolute;inset:0;background:linear-gradient(170deg,#02040A,#030710);">
+    <div id="sleep-dim" style="position:absolute;inset:0;background:#000;opacity:0;z-index:2;pointer-events:none;transition:opacity .5s;"></div>
+    <div id="sleep-content" style="position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
+      align-items:center;justify-content:center;gap:14px;opacity:0;transition:opacity .9s;">
+      <div style="font-size:96px;line-height:1;margin-bottom:10px;animation:mf 4.5s ease-in-out infinite,mg 3.5s ease-in-out infinite;">🌙</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:800;color:rgba(180,205,245,.6);text-align:center;">Selamat tidur...</div>
+      <div style="font-size:15px;color:rgba(90,112,160,.5);font-style:italic;text-align:center;">Mimpi yang indah ya 💫</div>
+      <div style="display:flex;gap:14px;margin-top:4px;">
+        <div style="font-size:18px;font-weight:900;font-family:'Baloo 2',cursive;color:rgba(74,120,255,.25);animation:fl 1.6s 0s ease infinite;">Z</div>
+        <div style="font-size:26px;font-weight:900;font-family:'Baloo 2',cursive;color:rgba(74,120,255,.32);animation:fl 2.1s .4s ease infinite;">Z</div>
+        <div style="font-size:34px;font-weight:900;font-family:'Baloo 2',cursive;color:rgba(74,120,255,.38);animation:fl 2.6s .8s ease infinite;">Z</div>
+      </div>
+      <div id="lullaby-viz" style="display:flex;gap:5px;align-items:flex-end;height:34px;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════
+   BABY MO BEDTIME — Vanilla JS, no frameworks
+   Touch events attached with {passive:false} directly
+   guaranteed to work on all mobile browsers
+════════════════════════════════════════════════════════ */
+
+/* ── STARS ── */
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<65;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=.6+Math.random()*2.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;`
+      +`opacity:${.15+Math.random()*.8};animation:tw ${2+Math.random()*4}s ${Math.random()*5}s infinite ease-in-out;`;
+    c.appendChild(s);
+  }
+})();
+
+/* ── VIBRATE ── */
+function vib(ms=40){try{navigator.vibrate?.(ms);}catch(e){}}
+
+/* ── SPEAK ── */
 function speak(text){
-  try{window.speechSynthesis.cancel();
+  try{
+    window.speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.lang='ar-SA';u.rate=.5;u.pitch=1.1;u.volume=1;
-    window.speechSynthesis.speak(u);}catch(e){}
+    u.lang='ar-SA';u.rate=.48;u.pitch=1.1;u.volume=1;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
 }
 
-/* THE KEY FIX: attach touch events directly to DOM with passive:false
-   React synthetic touch events are passive by default in modern browsers,
-   so e.preventDefault() is silently ignored and the browser scroll wins.
-   We bypass React for all swipe/drag interactions.                      */
-function useNativeTouch(ref, {onStart,onMove,onEnd}, deps=[]){
-  useEffect(()=>{
-    const el=ref.current; if(!el) return;
-    const o={passive:false};
-    if(onStart) el.addEventListener('touchstart',onStart,o);
-    if(onMove)  el.addEventListener('touchmove', onMove, o);
-    if(onEnd)   el.addEventListener('touchend',  onEnd,  o);
-    return()=>{
-      if(onStart) el.removeEventListener('touchstart',onStart);
-      if(onMove)  el.removeEventListener('touchmove', onMove);
-      if(onEnd)   el.removeEventListener('touchend',  onEnd);
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ref.current,...deps]);
-}
-
-const Lullaby=(()=>{
-  let ctx=null,gain=null,active=false,timer=null,next=0,idx=0;
-  const N=[[196,.7],[220,.7],[247,.5],[196,.2],[220,.8],[294,.7],[330,.5],[294,.2],
-           [220,.7],[196,.5],[247,.3],[196,.2],[165,1.2],[0,.4],[196,.6],[220,.6],
-           [247,.4],[294,.6],[330,.8],[294,.5],[247,.5],[220,.5],[196,1.5],[0,.8]];
+/* ── LULLABY ── */
+var LUL=(function(){
+  var ctx=null,gain=null,active=false,timer=null,ni=0,nt=0;
+  var N=[[196,.7],[220,.7],[247,.5],[196,.2],[220,.8],[294,.7],[330,.5],[294,.2],
+         [220,.7],[196,.5],[247,.3],[196,.2],[165,1.2],[0,.4],[196,.6],[220,.6],
+         [247,.4],[294,.6],[330,.8],[294,.5],[247,.5],[220,.5],[196,1.5],[0,.8]];
   function note(f,t,d){
     if(!f||!gain)return;
-    const o=ctx.createOscillator(),e=ctx.createGain(),fl=ctx.createBiquadFilter();
+    var o=ctx.createOscillator(),e=ctx.createGain(),fl=ctx.createBiquadFilter();
     fl.type='lowpass';fl.frequency.value=500;o.type='sine';o.frequency.value=f;
     o.connect(fl);fl.connect(e);e.connect(gain);
-    e.gain.setValueAtTime(0,t);
-    e.gain.linearRampToValueAtTime(.6,t+Math.min(.06,d*.12));
-    e.gain.exponentialRampToValueAtTime(.001,t+d-.04);
-    o.start(t);o.stop(t+d);
+    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.6,t+Math.min(.06,d*.12));
+    e.gain.exponentialRampToValueAtTime(.001,t+d-.04);o.start(t);o.stop(t+d);
   }
   function tick(){
-    while(next<ctx.currentTime+.6){const[f,d]=N[idx%N.length];note(f,next,d);next+=d;idx++;}
+    while(nt<ctx.currentTime+.6){var nn=N[ni%N.length];note(nn[0],nt,nn[1]);nt+=nn[1];ni++;}
     if(active)timer=setTimeout(tick,200);
   }
   return{
-    start(){if(active)return;try{
+    start:function(){if(active)return;try{
       ctx=new(window.AudioContext||window.webkitAudioContext)();
       gain=ctx.createGain();gain.gain.setValueAtTime(0,ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(.2,ctx.currentTime+5);
-      gain.connect(ctx.destination);next=ctx.currentTime+1;idx=0;active=true;tick();
+      gain.gain.linearRampToValueAtTime(.22,ctx.currentTime+5);
+      gain.connect(ctx.destination);nt=ctx.currentTime+1;ni=0;active=true;tick();
     }catch(e){}},
-    stop(){active=false;clearTimeout(timer);
+    stop:function(){active=false;clearTimeout(timer);
       if(gain&&ctx){gain.gain.linearRampToValueAtTime(0,ctx.currentTime+2.5);
-        setTimeout(()=>{try{ctx.close();}catch(e){}ctx=null;},3200);}},
+        setTimeout(function(){try{ctx.close();}catch(e){}ctx=null;},3200);}}
   };
 })();
 
-const STEPS=[
-  {id:'brush',  label:'Gosok Gigi',emoji:'🪥',color:'#3ECFB8'},
-  {id:'pajamas',label:'Ganti Baju', emoji:'👕',color:'#A97FFF'},
-  {id:'doa',    label:'Baca Doa',  emoji:'🤲',color:'#FFD166'},
-  {id:'tidur',  label:'Tidur',     emoji:'💤',color:'#4A78FF'},
-];
-const PJ=[
-  {id:'shirt', emoji:'👕',label:'Baju tidur',  color:'#A97FFF'},
-  {id:'pants', emoji:'🩲',label:'Celana tidur', color:'#7EA5FF'},
-  {id:'boneka',emoji:'🧸',label:'Boneka',        color:'#FFD166'},
-];
-const DOA=[
-  {arabic:'بِسْمِكَ اللَّهُمَّ',latin:'Bismika Allāhumma',mean:'Dengan nama-Mu ya Allah',speech:'بسمك اللهم',color:'#FFD166'},
-  {arabic:'أَحْيَا وَأَمُوتُ',latin:'ahyā wa amūtu',mean:'aku hidup dan aku mati',speech:'أحيا وأموت',color:'#A97FFF'},
-];
-
-const StarField=memo(({count=55,drift=false})=>{
-  const stars=useMemo(()=>Array.from({length:count},(_,id)=>({
-    id,x:Math.random()*100,y:Math.random()*100,s:.6+Math.random()*2.2,
-    dur:2+Math.random()*4,delay:Math.random()*5,op:.15+Math.random()*.85})),[count]);
-  return(<div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0}}>
-    {stars.map(({id,x,y,s,dur,delay,op})=>(
-      <div key={id} style={{position:'absolute',left:x+'%',top:y+'%',width:s+'px',height:s+'px',
-        borderRadius:'50%',background:'#D4E8FF',opacity:op,
-        animation:`twinkle ${dur}s ${delay}s infinite ease-in-out`
-          +(drift?`, starDrift ${7+dur}s ${delay}s infinite alternate ease-in-out`:'')}}/>
-    ))}
-  </div>);
-});
-
-function StepDots({current}){
-  return(<div style={{display:'flex',gap:7,justifyContent:'center',
-    paddingTop:`calc(14px + var(--safe-top))`,paddingBottom:4,position:'relative',zIndex:2}}>
-    {STEPS.map(({id,color},i)=>{const done=i<current,active=i===current;
-      return(<div key={id} style={{height:8,borderRadius:99,width:active?28:8,
-        background:done?color:active?'#7EA5FF':'var(--border)',
-        transition:'all .45s cubic-bezier(.34,1.56,.64,1)',
-        boxShadow:active?`0 0 12px ${color}90`:'none'}}/>);
-    })}
-  </div>);
-}
-
-function StepHeader({idx,title,subtitle}){
-  return(<div style={{padding:'16px 28px 0',textAlign:'center',position:'relative',zIndex:2}}>
-    <div style={{fontSize:11,fontWeight:800,color:'var(--text3)',letterSpacing:2.5,
-      textTransform:'uppercase',marginBottom:5}}>Langkah {idx+1} dari {STEPS.length}</div>
-    <div style={{fontFamily:"'Baloo 2',cursive",fontSize:24,fontWeight:800,
-      color:'var(--text)',lineHeight:1.2,marginBottom:4}}>{STEPS[idx].emoji}&nbsp;{title}</div>
-    <div style={{fontSize:14,color:'var(--text2)',lineHeight:1.5}}>{subtitle}</div>
-  </div>);
-}
-
-function FadeIn({children}){
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setVis(true),40);return()=>clearTimeout(t);},[]);
-  return(<div style={{flex:1,display:'flex',flexDirection:'column',opacity:vis?1:0,
-    transform:vis?'none':'translateY(26px)',transition:'all .55s cubic-bezier(.34,1.56,.64,1)'}}>
-    {children}</div>);
-}
-
-/* ── STEP 1: BRUSH TEETH ── */
-function BrushTeeth({onComplete}){
-  const NEEDED=7;
-  const[strokes,setStrokes]=useState(0);
-  const[brushX,setBrushX]=useState(50);
-  const[done,setDone]=useState(false);
-  const[face,setFace]=useState('😐');
-  const[gleam,setGleam]=useState(false);
-  const trackRef=useRef(null);
-  const S=useRef({strokes:0,done:false,lastDir:null,startX:null});
-  const FACES=['😐','🙂','😊','😄','🤩','⭐','😁'];
-  useEffect(()=>{S.current.strokes=strokes;},[strokes]);
-  useEffect(()=>{S.current.done=done;},[done]);
-  useEffect(()=>{if(strokes>=NEEDED&&!done){setDone(true);vibrate(100);setTimeout(onComplete,1000);}},[strokes,done,onComplete]);
-
-  useEffect(()=>{
-    const el=trackRef.current; if(!el)return;
-    function onStart(e){e.preventDefault();S.current.startX=e.touches[0].clientX;}
-    function onMove(e){
-      e.preventDefault();
-      if(S.current.startX===null)return;
-      const dx=e.touches[0].clientX-S.current.startX;
-      S.current.startX=e.touches[0].clientX;
-      setBrushX(p=>Math.max(8,Math.min(92,p+(dx/(el.clientWidth||280))*100)));
-    }
-    function onEnd(e){
-      e.preventDefault();
-      if(S.current.startX===null)return;
-      const dx=e.changedTouches[0].clientX-S.current.startX;
-      S.current.startX=null;
-      if(S.current.done){setBrushX(50);return;}
-      if(Math.abs(dx)>28){
-        const dir=dx>0?'R':'L';
-        if(dir!==S.current.lastDir){
-          S.current.lastDir=dir; vibrate(35);
-          setStrokes(s=>{const n=Math.min(s+1,NEEDED);
-            setFace(FACES[Math.min(n,6)]);setGleam(true);
-            setTimeout(()=>setGleam(false),350);return n;});
-        }
-      }
-      if(!S.current.done)setBrushX(50);
-    }
-    const o={passive:false};
-    el.addEventListener('touchstart',onStart,o);
-    el.addEventListener('touchmove',onMove,o);
-    el.addEventListener('touchend',onEnd,o);
-    return()=>{el.removeEventListener('touchstart',onStart);
-      el.removeEventListener('touchmove',onMove);el.removeEventListener('touchend',onEnd);};
-  },[onComplete]);
-
-  const prog=Math.min(strokes/NEEDED,1);
-  const tw=`hsl(${200-prog*200},${20+prog*60}%,${52+prog*32}%)`;
-  return(<FadeIn>
-    <StepHeader idx={0} title="Gosok Gigi" subtitle="Geser kiri–kanan untuk menyikat gigi 🪥"/>
-    <div style={{padding:'14px 28px 0',zIndex:2,position:'relative'}}>
-      <div style={{background:'var(--border)',borderRadius:99,height:7,overflow:'hidden'}}>
-        <div style={{height:'100%',width:(prog*100)+'%',borderRadius:99,
-          background:'linear-gradient(90deg,var(--teal),var(--teal-soft))',transition:'width .35s ease'}}/>
-      </div>
-      <div style={{display:'flex',justifyContent:'space-between',marginTop:5,
-        fontSize:11,fontWeight:700,color:'var(--text3)'}}>
-        <span>Mulai</span><span style={{color:'var(--teal)'}}>{strokes}/{NEEDED} usapan</span><span>Bersih ✓</span>
-      </div>
-    </div>
-    <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',
-      padding:'14px 28px',zIndex:2,position:'relative'}}>
-      <div style={{width:'100%',maxWidth:310}}>
-        <div style={{background:'#180808',borderRadius:'35% 35% 52% 52% / 25% 25% 50% 50%',
-          padding:'10px 16px 26px',border:'2.5px solid #2a1212',position:'relative',overflow:'hidden',marginBottom:8}}>
-          <div style={{height:5,marginBottom:5}}/>
-          <div style={{display:'flex',gap:3,justifyContent:'center',marginBottom:3}}>
-            {[0,1,2,3,4,5].map(i=>(
-              <div key={i} style={{flex:1,maxWidth:38,height:42,borderRadius:'5px 5px 10px 10px',
-                background:tw,transition:'background .4s ease',
-                backgroundImage:gleam?'linear-gradient(110deg,transparent 40%,rgba(255,255,255,.65) 50%,transparent 60%)':'none',
-                backgroundSize:'200% 100%',animation:gleam?'shine .35s ease':'none',
-                boxShadow:gleam?`0 0 14px ${tw}80`:'none'}}/>
-            ))}
-          </div>
-          <div style={{height:4,background:'rgba(160,30,30,.45)',borderRadius:4,marginBottom:3}}/>
-          <div style={{display:'flex',gap:3,justifyContent:'center'}}>
-            {[0,1,2,3,4].map(i=>(
-              <div key={i} style={{flex:1,maxWidth:30,height:24,borderRadius:'10px 10px 5px 5px',
-                background:`hsl(200,${15+prog*40}%,${42+prog*20}%)`,transition:'background .4s ease'}}/>
-            ))}
-          </div>
-          <div style={{position:'absolute',top:8,right:12,fontSize:22,
-            animation:'bounceIn .35s cubic-bezier(.34,1.56,.64,1)'}}>{face}</div>
-        </div>
-        <div ref={trackRef} style={{position:'relative',height:80,touchAction:'none',
-          cursor:'grab',background:'transparent',borderRadius:16}}>
-          <div style={{position:'absolute',top:'50%',left:0,right:0,height:2,
-            background:'var(--border)',borderRadius:99,transform:'translateY(-50%)'}}/>
-          <div style={{position:'absolute',top:'50%',left:'8%',
-            width:((Math.max(0,brushX-8))/84*100)+'%',height:2,
-            background:'linear-gradient(90deg,var(--teal),transparent)',transform:'translateY(-50%)'}}/>
-          <div style={{position:'absolute',left:brushX+'%',top:'50%',
-            transform:`translateX(-50%) translateY(-50%) rotate(${brushX>50?-22:22}deg)`,
-            fontSize:40,lineHeight:1,filter:'drop-shadow(0 2px 10px rgba(62,207,184,.5))',
-            transition:'left .12s ease'}}>🪥</div>
-          {strokes===0&&(<div style={{position:'absolute',bottom:4,left:0,right:0,
-            display:'flex',justifyContent:'space-between',padding:'0 10px',fontSize:22,
-            color:'var(--text3)',animation:'breathe 1.6s infinite',pointerEvents:'none'}}>
-            <span>←</span><span>→</span></div>)}
-        </div>
-      </div>
-    </div>
-    {done&&(<div style={{textAlign:'center',padding:'0 28px',
-      paddingBottom:`calc(24px + var(--safe-bot))`,zIndex:2,position:'relative',animation:'fadeUp .5s ease'}}>
-      <div style={{fontSize:38,marginBottom:4}}>✨✨✨</div>
-      <div style={{fontFamily:"'Baloo 2',cursive",fontSize:22,fontWeight:800,color:'var(--teal)'}}>
-        Gigi bersih &amp; putih!</div></div>)}
-  </FadeIn>);
-}
-
-/* ── STEP 2: PAJAMAS ── */
-function PajamasStep({onComplete}){
-  const[done,setDone]=useState(new Set());
-  const[ripples,setRipples]=useState({});
-  const complete=done.size>=PJ.length;
-  useEffect(()=>{if(complete){vibrate(100);setTimeout(onComplete,800);}},[complete,onComplete]);
-  const tap=useCallback((id,e)=>{
-    if(done.has(id))return; vibrate(40);
-    const rect=e.currentTarget.getBoundingClientRect();
-    const t=e.changedTouches?.[0]||e;
-    setRipples(r=>({...r,[id]:{x:(t.clientX-rect.left)/rect.width*100,y:(t.clientY-rect.top)/rect.height*100}}));
-    setTimeout(()=>setRipples(r=>{const n={...r};delete n[id];return n;}),600);
-    setDone(p=>new Set([...p,id]));
-  },[done]);
-  return(<FadeIn>
-    <StepHeader idx={1} title="Ganti Baju" subtitle="Ketuk setiap baju untuk memakainya"/>
-    <div style={{display:'flex',justifyContent:'center',padding:'14px 0 4px',zIndex:2,position:'relative'}}>
-      <div style={{width:68,height:68,borderRadius:'50%',background:'var(--card)',
-        border:'2px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:36,
-        boxShadow:complete?'0 0 28px rgba(169,127,255,.4)':'none',transition:'box-shadow .6s ease'}}>
-        {complete?'🌙':'👤'}</div>
-    </div>
-    <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',
-      padding:'10px 24px',zIndex:2,position:'relative'}}>
-      <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,width:'100%',maxWidth:320}}>
-        {PJ.map(({id,emoji,label,color},i)=>{
-          const isDone=done.has(id),rip=ripples[id];
-          return(<div key={id} onTouchEnd={e=>tap(id,e)} onClick={e=>tap(id,e)}
-            style={{gridColumn:i===2?'1/-1':'auto',
-              background:isDone?`${color}18`:'var(--card)',
-              border:`2px solid ${isDone?color:'var(--border)'}`,
-              borderRadius:22,padding:'20px 12px',textAlign:'center',
-              cursor:isDone?'default':'pointer',position:'relative',overflow:'hidden',
-              transform:isDone?'scale(.97)':'scale(1)',
-              transition:'all .4s cubic-bezier(.34,1.56,.64,1)',touchAction:'manipulation'}}>
-            {rip&&(<div style={{position:'absolute',left:rip.x+'%',top:rip.y+'%',
-              width:10,height:10,marginLeft:-5,marginTop:-5,borderRadius:'50%',
-              background:color,opacity:.5,animation:'ringPulse .6s ease forwards',pointerEvents:'none'}}/>)}
-            {!isDone&&(<div style={{position:'absolute',inset:0,borderRadius:21,
-              border:`1px solid ${color}25`,animation:'breathe 2.2s infinite'}}/>)}
-            <div style={{fontSize:50,marginBottom:8,lineHeight:1,
-              animation:isDone?'bounceIn .5s cubic-bezier(.34,1.56,.64,1)':'none',
-              filter:isDone?`drop-shadow(0 0 14px ${color}80)`:'none',transition:'filter .3s'}}>
-              {isDone?'✅':emoji}</div>
-            <div style={{fontSize:13,fontWeight:700,color:isDone?color:'var(--text2)',transition:'color .3s'}}>
-              {isDone?'Sudah! ✓':label}</div>
-          </div>);
-        })}
-      </div>
-    </div>
-    {complete&&(<div style={{textAlign:'center',padding:'0 28px',
-      paddingBottom:`calc(24px + var(--safe-bot))`,zIndex:2,position:'relative',animation:'fadeUp .5s ease'}}>
-      <div style={{fontFamily:"'Baloo 2',cursive",fontSize:22,fontWeight:800,color:'#A97FFF'}}>
-        Siap untuk tidur! 🌙</div></div>)}
-  </FadeIn>);
-}
-
-/* ── STEP 3: DOA ── */
-function DoaStep({onComplete}){
-  const[tapped,setTapped]=useState(new Set());
-  const[playing,setPlaying]=useState(null);
-  const complete=tapped.size>=DOA.length;
-  useEffect(()=>{if(complete){vibrate(100);setTimeout(onComplete,1100);}},[complete,onComplete]);
-  const tap=useCallback(i=>{
-    if(tapped.has(i)||playing!==null)return;
-    if(i>0&&!tapped.has(i-1))return;
-    vibrate(40); setPlaying(i); speak(DOA[i].speech);
-    setTimeout(()=>{setTapped(p=>new Set([...p,i]));setPlaying(null);},1700);
-  },[tapped,playing]);
-  return(<FadeIn>
-    <StepHeader idx={2} title="Baca Doa" subtitle="Ketuk setiap baris doa"/>
-    <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',
-      padding:'12px 24px',gap:12,zIndex:2,position:'relative'}}>
-      <div style={{textAlign:'center',marginBottom:4}}>
-        <span style={{display:'inline-flex',alignItems:'center',gap:8,
-          background:'rgba(255,209,102,.1)',border:'1px solid rgba(255,209,102,.2)',
-          borderRadius:99,padding:'6px 18px',fontSize:11,fontWeight:800,
-          color:'rgba(255,209,102,.8)',letterSpacing:1.5,textTransform:'uppercase'}}>
-          🌙 Doa Sebelum Tidur</span>
-      </div>
-      {DOA.map(({arabic,latin,mean,color},i)=>{
-        const isDone=tapped.has(i),isActive=playing===i,locked=i>0&&!tapped.has(i-1);
-        return(<div key={i} onTouchEnd={()=>tap(i)} onClick={()=>tap(i)}
-          style={{background:isDone?`${color}18`:isActive?`${color}12`:'var(--card)',
-            border:`2px solid ${isDone?color:isActive?color+'88':'var(--border)'}`,
-            borderRadius:20,padding:'18px 20px',cursor:locked?'default':'pointer',
-            opacity:locked?.32:1,position:'relative',overflow:'hidden',
-            transition:'all .35s cubic-bezier(.34,1.56,.64,1)',touchAction:'manipulation'}}>
-          {isActive&&(<div style={{position:'absolute',inset:0,
-            background:`radial-gradient(circle at 50% 50%,${color}20 0%,transparent 70%)`,
-            animation:'breathe .6s infinite'}}/>)}
-          <div style={{fontSize:28,fontFamily:'serif',fontWeight:700,textAlign:'right',
-            direction:'rtl',lineHeight:1.9,color:isDone?color:isActive?color:'var(--text)',
-            textShadow:isDone?`0 0 22px ${color}60`:'none',transition:'all .3s'}}>
-            {arabic}</div>
-          <div style={{fontSize:13,fontWeight:600,color:'var(--text2)',marginTop:3,fontStyle:'italic'}}>{latin}</div>
-          <div style={{fontSize:12,color:'var(--text3)',marginTop:2}}>{mean}</div>
-          <div style={{position:'absolute',top:14,right:16,fontSize:20,
-            animation:isDone?'checkPop .5s cubic-bezier(.34,1.56,.64,1)':'none'}}>
-            {isDone?'✅':isActive?'🔊':locked?'🔒':'👆'}</div>
-        </div>);
-      })}
-      {playing!==null&&(<div style={{display:'flex',gap:4,justifyContent:'center',alignItems:'flex-end',height:28}}>
-        {[2,3,5,4,6,4,3,2,4,5].map((h,i)=>(
-          <div key={i} style={{width:4,height:h*4+'px',background:'rgba(255,209,102,.6)',borderRadius:99,
-            animation:`wave ${.4+i*.1}s ${i*.06}s ease-in-out infinite`,transformOrigin:'bottom'}}/>
-        ))}</div>)}
-    </div>
-    {complete&&(<div style={{textAlign:'center',padding:'4px 28px',
-      paddingBottom:`calc(20px + var(--safe-bot))`,zIndex:2,position:'relative',animation:'fadeUp .5s ease'}}>
-      <div style={{fontSize:32,marginBottom:4}}>🤲</div>
-      <div style={{fontFamily:"'Baloo 2',cursive",fontSize:24,fontWeight:800,color:'var(--gold)'}}>Aamiin...</div>
-    </div>)}
-  </FadeIn>);
-}
-
-/* ── STEP 4: DRAG BLANKET ── */
-function SleepDrag({onComplete}){
-  const[prog,setProg]=useState(0);
-  const[done,setDone]=useState(false);
-  const bedRef=useRef(null);
-  const S=useRef({startY:null,startProg:0,done:false});
-  useEffect(()=>{S.current.done=done;},[done]);
-  useEffect(()=>{if(done){vibrate(120);setTimeout(onComplete,1200);}},[done,onComplete]);
-
-  useEffect(()=>{
-    const el=bedRef.current; if(!el)return;
-    function onStart(e){e.preventDefault();S.current.startY=e.touches[0].clientY;S.current.startProg=prog;}
-    function onMove(e){
-      e.preventDefault();
-      if(S.current.startY===null||S.current.done)return;
-      const dy=S.current.startY-e.touches[0].clientY;
-      const p=Math.max(0,Math.min(1,S.current.startProg+dy/((el.clientHeight||260)*.6)));
-      setProg(p);
-      if(p>=1&&!S.current.done){S.current.done=true;setDone(true);}
-    }
-    function onEnd(e){
-      e.preventDefault(); S.current.startY=null;
-      if(!S.current.done) setProg(p=>p<.45?0:p);
-    }
-    const o={passive:false};
-    el.addEventListener('touchstart',onStart,o);
-    el.addEventListener('touchmove',onMove,o);
-    el.addEventListener('touchend',onEnd,o);
-    return()=>{el.removeEventListener('touchstart',onStart);
-      el.removeEventListener('touchmove',onMove);el.removeEventListener('touchend',onEnd);};
-  },[onComplete]);
-
-  const blanketTop=86-prog*68;
-  const face=done?'😴':prog>.55?'🌙':prog>.2?'😌':'👁️';
-  return(<FadeIn>
-    <StepHeader idx={3} title="Tarik Selimut"
-      subtitle={done?'Selamat tidur! 💤':'Seret ke atas untuk menarik selimut'}/>
-    <div ref={bedRef} style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',
-      padding:'14px 32px',touchAction:'none',zIndex:2,position:'relative'}}>
-      <div style={{width:'100%',maxWidth:290,position:'relative'}}>
-        <div style={{background:'var(--card)',border:'2px solid var(--border)',
-          borderRadius:24,overflow:'hidden',position:'relative',height:250}}>
-          <div style={{position:'absolute',top:0,left:0,right:0,height:18,
-            background:'var(--border)',borderRadius:'22px 22px 0 0'}}/>
-          <div style={{position:'absolute',top:24,left:14,right:14,height:62,
-            background:'rgba(255,255,255,.055)',border:'1.5px solid rgba(255,255,255,.1)',
-            borderRadius:16,display:'flex',alignItems:'center',justifyContent:'center'}}>
-            <div style={{fontSize:48,transition:'all .5s ease',
-              filter:done?'drop-shadow(0 0 20px rgba(255,209,102,.55))':'none'}}>{face}</div>
-            {done&&[0,1,2].map(j=>(<div key={j} style={{position:'absolute',
-              right:(18+j*16)+'px',top:(2-j*7)+'px',fontSize:(12+j*5)+'px',
-              fontWeight:800,fontFamily:"'Baloo 2',cursive",
-              color:`rgba(100,180,255,${.35+j*.15})`,
-              animation:`floatUp ${1.4+j*.4}s ${j*.35}s ease infinite`}}>Z</div>))}
-          </div>
-          <div style={{position:'absolute',bottom:0,left:0,right:0,height:'55%',background:'var(--surface)'}}/>
-          <div style={{position:'absolute',left:0,right:0,bottom:0,top:blanketTop+'%',
-            transition:S.current.startY?'none':'top .3s ease'}}>
-            <div style={{position:'absolute',inset:0,
-              background:'linear-gradient(160deg,#1A3060 0%,#142850 30%,#1E376A 60%,#142850 100%)',overflow:'hidden'}}>
-              <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0px,rgba(255,255,255,.025) 12px,transparent 12px,transparent 24px)'}}/>
-              <div style={{position:'absolute',top:14,left:0,right:0,display:'flex',
-                justifyContent:'space-evenly',fontSize:10,color:'rgba(180,200,255,.18)'}}>
-                {['★','✦','★','✦','★','✦','★'].map((s,i)=><span key={i}>{s}</span>)}
-              </div>
-            </div>
-            <div style={{position:'absolute',top:0,left:0,right:0,height:18,
-              background:'linear-gradient(135deg,#2A50A0,#1E3A80)',borderRadius:'2px 2px 0 0',
-              borderBottom:'1px solid rgba(255,255,255,.08)'}}>
-              {!done&&(<div style={{position:'absolute',top:'50%',left:'50%',
-                transform:'translate(-50%,-50%)',width:46,height:5,borderRadius:99,
-                background:'rgba(126,165,255,.55)',boxShadow:'0 0 12px rgba(126,165,255,.4)'}}/>)}
-            </div>
-          </div>
-        </div>
-        {!done&&prog<.1&&(<div style={{position:'absolute',bottom:-38,left:'50%',
-          transform:'translateX(-50%)',textAlign:'center',color:'var(--text3)',
-          fontSize:13,fontWeight:700,animation:'floatUp 1.7s ease infinite',pointerEvents:'none'}}>
-          <div style={{fontSize:22,marginBottom:2}}>↑</div><div>Seret ke atas</div>
-        </div>)}
-      </div>
-    </div>
-  </FadeIn>);
-}
-
-/* ── SLEEP MODE ── */
-function SleepMode(){
-  const[dim,setDim]=useState(0);
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{
-    Lullaby.start(); setTimeout(()=>setVis(true),700);
-    let d=0; const iv=setInterval(()=>{d=Math.min(d+.0028,.74);setDim(d);},130);
-    return()=>{clearInterval(iv);Lullaby.stop();};
-  },[]);
-  return(<div style={{position:'absolute',inset:0,overflow:'hidden',
-    background:'linear-gradient(170deg,#02040A 0%,#030710 100%)'}}>
-    <StarField count={90} drift/>
-    <div style={{position:'absolute',inset:0,background:'#000',opacity:dim,
-      pointerEvents:'none',zIndex:2,transition:'opacity .5s ease'}}/>
-    <div style={{position:'absolute',inset:0,zIndex:3,display:'flex',flexDirection:'column',
-      alignItems:'center',justifyContent:'center',gap:12,opacity:vis?1:0,transition:'opacity .9s ease'}}>
-      <div style={{fontSize:100,lineHeight:1,
-        animation:'moonFloat 4.5s ease-in-out infinite, moonGlow 3.5s ease-in-out infinite',marginBottom:10}}>🌙</div>
-      <div style={{fontFamily:"'Baloo 2',cursive",fontSize:28,fontWeight:800,
-        color:'rgba(180,205,245,.6)',textAlign:'center',letterSpacing:.5}}>Selamat tidur...</div>
-      <div style={{fontSize:15,color:'rgba(90,112,160,.5)',fontStyle:'italic',textAlign:'center'}}>Mimpi yang indah ya 💫</div>
-      <div style={{display:'flex',gap:14,marginTop:4}}>
-        {['Z','Z','Z'].map((z,i)=>(<div key={i} style={{fontSize:(18+i*8)+'px',fontWeight:900,
-          fontFamily:"'Baloo 2',cursive",color:`rgba(74,120,255,${.18+i*.14})`,
-          animation:`floatUp ${1.6+i*.5}s ${i*.4}s ease infinite`}}>{z}</div>))}
-      </div>
-      <div style={{display:'flex',gap:5,alignItems:'flex-end',height:34,marginTop:10}}>
-        {[2,3,5,4,7,5,4,3,5,6].map((h,i)=>(<div key={i} style={{width:4,
-          background:`rgba(62,207,184,${.18+i*.028})`,borderRadius:99,height:h*4+'px',
-          animation:`wave ${.5+i*.12}s ${i*.08}s ease-in-out infinite`,transformOrigin:'bottom'}}/>))}
-      </div>
-    </div>
-  </div>);
-}
-
-/* ── STEP FLOW ── */
-function StepFlow({onDone}){
-  const[step,setStep]=useState(0);
-  const[leaving,setLeaving]=useState(false);
-  const advance=useCallback(()=>{
-    if(step<STEPS.length-1){setLeaving(true);setTimeout(()=>{setStep(s=>s+1);setLeaving(false);},360);}
-    else onDone();
-  },[step,onDone]);
-  const comps=[
-    <BrushTeeth  key="b" onComplete={advance}/>,
-    <PajamasStep key="p" onComplete={advance}/>,
-    <DoaStep     key="d" onComplete={advance}/>,
-    <SleepDrag   key="s" onComplete={advance}/>,
-  ];
-  return(<div style={{height:'100%',display:'flex',flexDirection:'column',
-    background:'linear-gradient(170deg,#04080F 0%,#080F1C 60%,#0A1228 100%)',position:'relative'}}>
-    <StarField count={38}/>
-    <div style={{position:'relative',zIndex:1,display:'flex',flexDirection:'column',height:'100%',
-      opacity:leaving?0:1,transform:leaving?'translateY(-18px)':'none',transition:'all .36s ease'}}>
-      <StepDots current={step}/>
-      <div style={{flex:1,display:'flex',flexDirection:'column',
-        paddingBottom:`calc(16px + var(--safe-bot))`}}>{comps[step]}</div>
-    </div>
-  </div>);
+/* ── SCREEN ROUTER ── */
+var currentScreen='home';
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('s-'+id).classList.add('on');
+  currentScreen=id;
 }
 
 /* ── HOME ── */
-function HomeScreen({onStart}){
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setVis(true),90);return()=>clearTimeout(t);},[]);
-  return(<div style={{height:'100%',
-    background:'linear-gradient(170deg,#04080F 0%,#060C18 45%,#08101E 100%)',
-    display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
-    position:'relative',overflow:'hidden'}}>
-    <StarField count={70}/>
-    <div style={{position:'absolute',bottom:0,left:0,right:0,height:'38%',
-      background:'radial-gradient(ellipse 80% 60% at 50% 120%,rgba(12,30,70,.55) 0%,transparent 70%)',pointerEvents:'none'}}/>
-    <div style={{position:'relative',zIndex:2,textAlign:'center',
-      padding:`calc(28px + var(--safe-top)) 36px calc(28px + var(--safe-bot))`,
-      opacity:vis?1:0,transform:vis?'none':'translateY(30px)',
-      transition:'all .9s cubic-bezier(.34,1.56,.64,1)'}}>
-      <div style={{fontSize:100,lineHeight:1,marginBottom:24,
-        animation:'moonFloat 4.5s ease-in-out infinite, moonGlow 3.5s ease-in-out infinite'}}>🌙</div>
-      <div style={{fontSize:11,fontWeight:800,letterSpacing:3,textTransform:'uppercase',
-        color:'var(--text3)',marginBottom:10}}>Baby Mo · Ritual Malam</div>
-      <h1 style={{fontFamily:"'Baloo 2',cursive",fontSize:40,fontWeight:800,lineHeight:1.15,
-        color:'var(--text)',marginBottom:10,letterSpacing:-.5}}>Waktunya<br/>Tidur! ✨</h1>
-      <p style={{fontSize:15,color:'var(--text2)',lineHeight:1.6,maxWidth:260,margin:'0 auto 44px'}}>
-        Yuk ikuti 4 langkah malam<br/>bersama Baby Mo 🌟</p>
-      <button onClick={()=>{vibrate(60);onStart();}}
-        style={{background:'linear-gradient(135deg,#3A64F0,#6B94FF)',border:'none',
-          borderRadius:100,padding:'19px 52px',fontFamily:"'Nunito',sans-serif",
-          fontSize:19,fontWeight:900,color:'#fff',cursor:'pointer',display:'block',margin:'0 auto',
-          boxShadow:'0 8px 36px rgba(74,120,255,.4),0 2px 8px rgba(0,0,0,.4)',
-          animation:'breathe 2.8s ease-in-out infinite',WebkitTapHighlightColor:'transparent',
-          touchAction:'manipulation'}}>Mulai Tidur 🌙</button>
-      <div style={{display:'flex',gap:22,justifyContent:'center',marginTop:38}}>
-        {STEPS.map(({id,emoji,label},i)=>(
-          <div key={id} style={{textAlign:'center',opacity:.45,animation:`fadeUp .5s ${.15+i*.1}s ease both`}}>
-            <div style={{fontSize:24,marginBottom:4}}>{emoji}</div>
-            <div style={{fontSize:10,fontWeight:700,color:'var(--text3)',letterSpacing:.5}}>{label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>);
+setTimeout(function(){
+  var c=document.getElementById('home-content');
+  c.style.opacity='1';c.style.transform='none';
+},80);
+document.getElementById('start-btn').addEventListener('click',function(){
+  vib(60);
+  showScreen('steps');
+  runStep(0);
+});
+
+/* ════════════════════════════════════════════════════════
+   STEP ENGINE
+════════════════════════════════════════════════════════ */
+var STEP_COLORS=['#3ECFB8','#A97FFF','#FFD166','#4A78FF'];
+
+function updateDots(current){
+  document.querySelectorAll('.dot').forEach(function(d,i){
+    d.className='dot'+(i<current?' done':i===current?' act':'');
+    if(i===current)d.style.boxShadow='0 0 12px '+STEP_COLORS[i]+'90';
+    else d.style.boxShadow='none';
+  });
 }
 
-/* ── APP ROOT ── */
-function Fade({children}){
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setVis(true),40);return()=>clearTimeout(t);},[]);
-  return(<div style={{position:'absolute',inset:0,opacity:vis?1:0,transition:'opacity .45s ease'}}>{children}</div>);
+function runStep(idx){
+  updateDots(idx);
+  var body=document.getElementById('step-body');
+  body.innerHTML='';
+  body.style.opacity='0';body.style.transform='translateY(24px)';
+
+  // Build step
+  var builders=[buildBrush,buildPajamas,buildDoa,buildSleep];
+  builders[idx](body,function(){
+    // advance
+    body.style.opacity='0';body.style.transform='translateY(-18px)';
+    body.style.transition='all .36s ease';
+    setTimeout(function(){
+      body.style.transition='';
+      if(idx<3){runStep(idx+1);}
+      else{showScreen('sleep');startSleepMode();}
+    },360);
+  });
+
+  setTimeout(function(){
+    body.style.transition='all .55s cubic-bezier(.34,1.56,.64,1)';
+    body.style.opacity='1';body.style.transform='none';
+    setTimeout(function(){body.style.transition='';},600);
+  },40);
 }
-function App(){
-  const[screen,setScreen]=useState('home');
-  return(<div style={{width:'100%',height:'100%',position:'relative',overflow:'hidden'}}>
-    {screen==='home' &&<Fade key="h"><HomeScreen onStart={()=>setScreen('steps')}/></Fade>}
-    {screen==='steps'&&<Fade key="s"><StepFlow   onDone={()=>setScreen('sleep')}/></Fade>}
-    {screen==='sleep'&&<Fade key="z"><SleepMode/></Fade>}
-  </div>);
+
+/* ════════════════════════════════════════════════════════
+   STEP 1 — BRUSH TEETH
+   Uses native touchstart/touchmove/touchend with passive:false
+   directly on the track element — no React, no passive issues
+════════════════════════════════════════════════════════ */
+function buildBrush(container, done){
+  var NEEDED=7, strokes=0, brushX=50, lastDir=null, startX=null, finished=false;
+  var FACES=['😐','🙂','😊','😄','🤩','⭐','😁'];
+
+  container.innerHTML=`
+    <div class="shd">
+      <div class="sl">Langkah 1 dari 4</div>
+      <div class="st">🪥 Gosok Gigi</div>
+      <div class="ss">Geser kiri ← → kanan untuk menyikat</div>
+    </div>
+    <div style="padding:14px 28px 0;position:relative;z-index:2;">
+      <div class="pbar-wrap"><div class="pbar" id="b-bar"></div></div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:11px;font-weight:700;color:var(--dim);">
+        <span>Mulai</span><span id="b-count" style="color:var(--teal);">0/`+NEEDED+` usapan</span><span>Bersih ✓</span>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:14px 28px;position:relative;z-index:2;">
+      <div style="width:100%;max-width:310px;">
+        <!-- MOUTH -->
+        <div style="background:#180808;border-radius:35% 35% 52% 52% / 25% 25% 50% 50%;
+          padding:10px 16px 26px;border:2.5px solid #2a1212;position:relative;overflow:hidden;margin-bottom:8px;">
+          <div style="height:5px;margin-bottom:5px;"></div>
+          <div style="display:flex;gap:3px;justify-content:center;margin-bottom:3px;" id="teeth-top"></div>
+          <div style="height:4px;background:rgba(160,30,30,.45);border-radius:4px;margin-bottom:3px;"></div>
+          <div style="display:flex;gap:3px;justify-content:center;" id="teeth-bot"></div>
+          <div id="b-face" style="position:absolute;top:8px;right:12px;font-size:22px;">😐</div>
+        </div>
+        <!-- TRACK — touch zone -->
+        <div id="brush-track" style="position:relative;height:84px;border-radius:16px;
+          touch-action:none;cursor:grab;background:transparent;">
+          <div style="position:absolute;top:50%;left:0;right:0;height:2px;
+            background:var(--border);border-radius:99px;transform:translateY(-50%);"></div>
+          <div id="brush-fill" style="position:absolute;top:50%;left:8%;width:0%;height:2px;
+            background:linear-gradient(90deg,var(--teal),transparent);transform:translateY(-50%);"></div>
+          <div id="brush-emoji" style="position:absolute;top:50%;font-size:40px;line-height:1;
+            filter:drop-shadow(0 2px 10px rgba(62,207,184,.5));
+            transform:translateX(-50%) translateY(-50%) rotate(22deg);left:50%;">🪥</div>
+          <div id="brush-hint" style="position:absolute;bottom:4px;left:0;right:0;
+            display:flex;justify-content:space-between;padding:0 10px;
+            font-size:22px;color:var(--dim);animation:br 1.6s infinite;pointer-events:none;">
+            <span>←</span><span>→</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="b-done" style="display:none;text-align:center;padding:0 28px 24px;z-index:2;position:relative;animation:fu .5s ease;">
+      <div style="font-size:38px;margin-bottom:4px;">✨✨✨</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:var(--teal);">Gigi bersih &amp; putih!</div>
+    </div>
+  `;
+
+  // Build teeth
+  function toothColor(){
+    var p=strokes/NEEDED;
+    return 'hsl('+(200-p*200)+','+(20+p*60)+'%,'+(52+p*32)+'%)';
+  }
+  function renderTeeth(){
+    var c=toothColor();
+    var top=document.getElementById('teeth-top');
+    var bot=document.getElementById('teeth-bot');
+    top.innerHTML='';bot.innerHTML='';
+    for(var i=0;i<6;i++){
+      var d=document.createElement('div');
+      d.style.cssText='flex:1;max-width:38px;height:42px;border-radius:5px 5px 10px 10px;background:'+c+';transition:background .4s;';
+      top.appendChild(d);
+    }
+    for(var j=0;j<5;j++){
+      var p=strokes/NEEDED;
+      var d2=document.createElement('div');
+      d2.style.cssText='flex:1;max-width:30px;height:24px;border-radius:10px 10px 5px 5px;'
+        +'background:hsl(200,'+(15+p*40)+'%,'+(42+p*20)+'%);transition:background .4s;';
+      bot.appendChild(d2);
+    }
+  }
+  renderTeeth();
+
+  function addStroke(dir){
+    if(dir===lastDir||finished)return;
+    lastDir=dir; strokes=Math.min(strokes+1,NEEDED);
+    vib(35);
+    document.getElementById('b-face').textContent=FACES[Math.min(strokes,6)];
+    document.getElementById('b-count').textContent=strokes+'/'+NEEDED+' usapan';
+    document.getElementById('b-bar').style.width=(strokes/NEEDED*100)+'%';
+    renderTeeth();
+    if(strokes>=NEEDED&&!finished){
+      finished=true; vib(100);
+      document.getElementById('brush-hint').style.display='none';
+      document.getElementById('b-done').style.display='block';
+      setTimeout(done,1000);
+    }
+  }
+
+  function updateBrush(){
+    var el=document.getElementById('brush-emoji');
+    var fill=document.getElementById('brush-fill');
+    if(!el||!fill)return;
+    el.style.left=brushX+'%';
+    el.style.transform='translateX(-50%) translateY(-50%) rotate('+(brushX>50?-22:22)+'deg)';
+    var pct=Math.max(0,brushX-8)/84*100;
+    fill.style.width=pct+'%';
+  }
+
+  // ← NATIVE TOUCH with passive:false
+  var track=document.getElementById('brush-track');
+  track.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    startX=e.touches[0].clientX;
+  },{passive:false});
+
+  track.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(startX===null)return;
+    var dx=e.touches[0].clientX-startX;
+    startX=e.touches[0].clientX;
+    brushX=Math.max(8,Math.min(92,brushX+(dx/track.clientWidth)*100));
+    updateBrush();
+  },{passive:false});
+
+  track.addEventListener('touchend',function(e){
+    e.preventDefault();
+    if(startX===null)return;
+    var dx=e.changedTouches[0].clientX-startX;
+    startX=null;
+    if(Math.abs(dx)>25){
+      addStroke(dx>0?'R':'L');
+    }
+    if(!finished){brushX=50;updateBrush();}
+  },{passive:false});
+
+  // Mouse support for desktop testing
+  var mdown=false,msx=0;
+  track.addEventListener('mousedown',function(e){mdown=true;msx=e.clientX;});
+  window.addEventListener('mousemove',function(e){
+    if(!mdown)return;
+    var dx=e.clientX-msx; msx=e.clientX;
+    brushX=Math.max(8,Math.min(92,brushX+(dx/track.clientWidth)*100));
+    updateBrush();
+  });
+  window.addEventListener('mouseup',function(e){
+    if(!mdown)return;
+    var dx=e.clientX-msx; mdown=false;
+    if(Math.abs(dx)>10)addStroke(dx>0?'R':'L');
+    if(!finished){brushX=50;updateBrush();}
+  });
 }
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+
+/* ════════════════════════════════════════════════════════
+   STEP 2 — PAJAMAS
+════════════════════════════════════════════════════════ */
+function buildPajamas(container, done){
+  var items=[
+    {id:'shirt', emoji:'👕',label:'Baju tidur',  color:'#A97FFF'},
+    {id:'pants', emoji:'🩲',label:'Celana tidur', color:'#7EA5FF'},
+    {id:'boneka',emoji:'🧸',label:'Boneka',        color:'#FFD166'},
+  ];
+  var tapped={};
+
+  container.innerHTML=`
+    <div class="shd">
+      <div class="sl">Langkah 2 dari 4</div>
+      <div class="st">👕 Ganti Baju</div>
+      <div class="ss">Ketuk setiap baju untuk memakainya</div>
+    </div>
+    <div style="display:flex;justify-content:center;padding:14px 0 4px;position:relative;z-index:2;">
+      <div id="pj-char" style="width:68px;height:68px;border-radius:50%;background:var(--card2);
+        border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:36px;
+        transition:box-shadow .6s;">👤</div>
+    </div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:10px 24px;position:relative;z-index:2;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;max-width:320px;" id="pj-grid"></div>
+    </div>
+    <div id="pj-done" style="display:none;text-align:center;padding:0 28px 24px;z-index:2;position:relative;animation:fu .5s ease;">
+      <div style="font-family:'Baloo 2',cursive;font-size:22px;font-weight:800;color:#A97FFF;">Siap untuk tidur! 🌙</div>
+    </div>
+  `;
+
+  var grid=document.getElementById('pj-grid');
+
+  function checkDone(){
+    if(Object.keys(tapped).length>=items.length){
+      document.getElementById('pj-char').textContent='🌙';
+      document.getElementById('pj-char').style.boxShadow='0 0 28px rgba(169,127,255,.4)';
+      document.getElementById('pj-done').style.display='block';
+      vib(100);
+      setTimeout(done,800);
+    }
+  }
+
+  items.forEach(function(item,i){
+    var el=document.createElement('div');
+    el.style.cssText='grid-column:'+(i===2?'1/-1':'auto')+';'
+      +'background:var(--card2);border:2px solid var(--border);border-radius:22px;'
+      +'padding:20px 12px;text-align:center;cursor:pointer;position:relative;overflow:hidden;'
+      +'transition:all .4s cubic-bezier(.34,1.56,.64,1);touch-action:manipulation;';
+    el.innerHTML='<div class="item-emoji" style="font-size:50px;margin-bottom:8px;line-height:1;">'+item.emoji+'</div>'
+      +'<div class="item-label" style="font-size:13px;font-weight:700;color:var(--muted);">'+item.label+'</div>';
+
+    function tapItem(e){
+      if(tapped[item.id])return;
+      tapped[item.id]=true; vib(40);
+      el.style.background=item.color+'18';
+      el.style.border='2px solid '+item.color;
+      el.style.transform='scale(.97)';
+      el.querySelector('.item-emoji').textContent='✅';
+      el.querySelector('.item-emoji').style.animation='bi .5s cubic-bezier(.34,1.56,.64,1)';
+      el.querySelector('.item-emoji').style.filter='drop-shadow(0 0 14px '+item.color+'80)';
+      el.querySelector('.item-label').textContent='Sudah! ✓';
+      el.querySelector('.item-label').style.color=item.color;
+      // ripple
+      var r=document.createElement('div');
+      var rect=el.getBoundingClientRect();
+      var tx=e.changedTouches?e.changedTouches[0].clientX:e.clientX;
+      var ty=e.changedTouches?e.changedTouches[0].clientY:e.clientY;
+      r.style.cssText='position:absolute;left:'+(tx-rect.left-5)+'px;top:'+(ty-rect.top-5)+'px;'
+        +'width:10px;height:10px;border-radius:50%;background:'+item.color+';opacity:.5;'
+        +'animation:rp .6s ease forwards;pointer-events:none;';
+      el.appendChild(r);
+      setTimeout(function(){r.remove();},700);
+      checkDone();
+    }
+    el.addEventListener('touchend',tapItem,{passive:true});
+    el.addEventListener('click',tapItem);
+    grid.appendChild(el);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   STEP 3 — DOA
+════════════════════════════════════════════════════════ */
+function buildDoa(container, done){
+  var duas=[
+    {arabic:'بِسْمِكَ اللَّهُمَّ',latin:'Bismika Allāhumma',mean:'Dengan nama-Mu ya Allah',speech:'بسمك اللهم',color:'#FFD166'},
+    {arabic:'أَحْيَا وَأَمُوتُ',  latin:'ahyā wa amūtu',   mean:'aku hidup dan aku mati',   speech:'أحيا وأموت',   color:'#A97FFF'},
+  ];
+  var tapped=new Array(duas.length).fill(false);
+  var playing=false;
+
+  container.innerHTML=`
+    <div class="shd">
+      <div class="sl">Langkah 3 dari 4</div>
+      <div class="st">🤲 Baca Doa</div>
+      <div class="ss">Ketuk setiap baris doa berurutan</div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;
+      padding:12px 24px;gap:12px;position:relative;z-index:2;">
+      <div style="text-align:center;margin-bottom:4px;">
+        <span style="display:inline-flex;align-items:center;gap:8px;
+          background:rgba(255,209,102,.1);border:1px solid rgba(255,209,102,.2);
+          border-radius:99px;padding:6px 18px;font-size:11px;font-weight:800;
+          color:rgba(255,209,102,.8);letter-spacing:1.5px;text-transform:uppercase;">
+          🌙 Doa Sebelum Tidur
+        </span>
+      </div>
+      <div id="doa-lines"></div>
+      <div id="doa-wave" style="display:none;flex;gap:4px;justify-content:center;align-items:flex-end;height:28px;"></div>
+    </div>
+    <div id="doa-done" style="display:none;text-align:center;padding:4px 28px 20px;z-index:2;position:relative;animation:fu .5s ease;">
+      <div style="font-size:32px;margin-bottom:4px;">🤲</div>
+      <div style="font-family:'Baloo 2',cursive;font-size:24px;font-weight:800;color:var(--gold);">Aamiin...</div>
+    </div>
+  `;
+
+  // Wave
+  var waveEl=document.getElementById('doa-wave');
+  [2,3,5,4,6,4,3,2,4,5].forEach(function(h,i){
+    var b=document.createElement('div');
+    b.style.cssText='width:4px;height:'+(h*4)+'px;background:rgba(255,209,102,.6);border-radius:99px;'
+      +'animation:wv '+(0.4+i*.1)+'s '+(i*.06)+'s ease-in-out infinite;transform-origin:bottom;';
+    waveEl.appendChild(b);
+  });
+
+  var linesEl=document.getElementById('doa-lines');
+
+  duas.forEach(function(d,i){
+    var el=document.createElement('div');
+    el.style.cssText='background:var(--card2);border:2px solid var(--border);border-radius:20px;'
+      +'padding:18px 20px;cursor:pointer;position:relative;overflow:hidden;'
+      +'transition:all .35s cubic-bezier(.34,1.56,.64,1);touch-action:manipulation;margin-bottom:12px;';
+    el.innerHTML='<div style="font-size:27px;font-family:serif;font-weight:700;text-align:right;'
+      +'direction:rtl;line-height:1.9;color:var(--text);transition:all .3s;">'+d.arabic+'</div>'
+      +'<div style="font-size:13px;font-weight:600;color:var(--muted);margin-top:3px;font-style:italic;">'+d.latin+'</div>'
+      +'<div style="font-size:12px;color:var(--dim);margin-top:2px;">'+d.mean+'</div>'
+      +'<div id="doa-icon-'+i+'" style="position:absolute;top:14px;right:16px;font-size:20px;">'+
+      (i===0?'👆':'🔒')+'</div>';
+
+    function tapDoa(e){
+      if(tapped[i]||playing)return;
+      if(i>0&&!tapped[i-1])return;
+      playing=true; vib(40);
+      var icon=document.getElementById('doa-icon-'+i);
+      icon.textContent='🔊';
+      el.style.background=d.color+'12';
+      el.style.borderColor=d.color+'88';
+      waveEl.style.display='flex';
+      speak(d.speech);
+      setTimeout(function(){
+        tapped[i]=true; playing=false;
+        el.style.background=d.color+'18';
+        el.style.borderColor=d.color;
+        el.querySelector('div').style.color=d.color;
+        el.querySelector('div').style.textShadow='0 0 22px '+d.color+'60';
+        icon.textContent='✅';
+        icon.style.animation='bi .5s cubic-bezier(.34,1.56,.64,1)';
+        waveEl.style.display='none';
+        // unlock next
+        if(i+1<duas.length){
+          document.getElementById('doa-icon-'+(i+1)).textContent='👆';
+        }
+        if(tapped.every(Boolean)){
+          document.getElementById('doa-done').style.display='block';
+          vib(100);
+          setTimeout(done,1100);
+        }
+      },1700);
+    }
+    el.addEventListener('touchend',tapDoa,{passive:true});
+    el.addEventListener('click',tapDoa);
+    linesEl.appendChild(el);
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   STEP 4 — DRAG BLANKET
+   Native touch with passive:false — same guaranteed approach
+════════════════════════════════════════════════════════ */
+function buildSleep(container, done){
+  var prog=0, startY=null, startProg=0, finished=false;
+
+  container.innerHTML=`
+    <div class="shd">
+      <div class="sl">Langkah 4 dari 4</div>
+      <div class="st" id="sleep-title">💤 Tarik Selimut</div>
+      <div class="ss" id="sleep-sub">Seret ke atas untuk menarik selimut</div>
+    </div>
+    <div id="bed-zone" style="flex:1;display:flex;align-items:center;justify-content:center;
+      padding:14px 32px;touch-action:none;position:relative;z-index:2;">
+      <div style="width:100%;max-width:290px;position:relative;">
+        <div id="bed-frame" style="background:var(--card2);border:2px solid var(--border);
+          border-radius:24px;overflow:hidden;position:relative;height:250px;">
+          <!-- Headboard -->
+          <div style="position:absolute;top:0;left:0;right:0;height:18px;
+            background:var(--border);border-radius:22px 22px 0 0;"></div>
+          <!-- Pillow + face -->
+          <div style="position:absolute;top:24px;left:14px;right:14px;height:62px;
+            background:rgba(255,255,255,.055);border:1.5px solid rgba(255,255,255,.1);
+            border-radius:16px;display:flex;align-items:center;justify-content:center;">
+            <div id="bed-face" style="font-size:48px;transition:all .5s;">👁️</div>
+            <div id="zzz-wrap" style="display:none;position:absolute;top:0;right:0;bottom:0;left:0;">
+              <div style="position:absolute;right:34px;top:3px;font-size:12px;font-weight:900;font-family:'Baloo 2',cursive;color:rgba(100,180,255,.35);animation:fl 1.4s 0s ease infinite;">Z</div>
+              <div style="position:absolute;right:20px;top:-3px;font-size:17px;font-weight:900;font-family:'Baloo 2',cursive;color:rgba(100,180,255,.45);animation:fl 1.8s .35s ease infinite;">Z</div>
+              <div style="position:absolute;right:2px;top:-9px;font-size:22px;font-weight:900;font-family:'Baloo 2',cursive;color:rgba(100,180,255,.5);animation:fl 2.2s .7s ease infinite;">Z</div>
+            </div>
+          </div>
+          <!-- Mattress -->
+          <div style="position:absolute;bottom:0;left:0;right:0;height:55%;background:var(--card);"></div>
+          <!-- Blanket -->
+          <div id="blanket" class="blanket" style="top:86%;transition:top .3s ease;">
+            <div class="blanket-body">
+              <div class="blanket-pattern"></div>
+              <div style="position:absolute;top:14px;left:0;right:0;display:flex;justify-content:space-evenly;font-size:10px;color:rgba(180,200,255,.18);">
+                <span>★</span><span>✦</span><span>★</span><span>✦</span><span>★</span><span>✦</span><span>★</span>
+              </div>
+            </div>
+            <div class="blanket-fold">
+              <div id="blanket-handle" class="blanket-handle"></div>
+            </div>
+          </div>
+        </div>
+        <div id="drag-hint" style="position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);
+          text-align:center;color:var(--dim);font-size:13px;font-weight:700;
+          animation:fl 1.7s ease infinite;pointer-events:none;">
+          <div style="font-size:22px;margin-bottom:2px;">↑</div>
+          <div>Seret ke atas</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  function updateBlanket(){
+    var top=86-prog*68;
+    var blanket=document.getElementById('blanket');
+    blanket.style.top=top+'%';
+    // face reaction
+    var face=document.getElementById('bed-face');
+    if(finished){face.textContent='😴';}
+    else if(prog>.55){face.textContent='🌙';}
+    else if(prog>.2){face.textContent='😌';}
+    else{face.textContent='👁️';}
+    // hide hint
+    if(prog>.08)document.getElementById('drag-hint').style.display='none';
+  }
+
+  // ← NATIVE TOUCH with passive:false
+  var zone=document.getElementById('bed-zone');
+
+  zone.addEventListener('touchstart',function(e){
+    e.preventDefault();
+    startY=e.touches[0].clientY;
+    startProg=prog;
+  },{passive:false});
+
+  zone.addEventListener('touchmove',function(e){
+    e.preventDefault();
+    if(startY===null||finished)return;
+    var dy=startY-e.touches[0].clientY;
+    var H=zone.clientHeight||260;
+    prog=Math.max(0,Math.min(1,startProg+dy/(H*.6)));
+    document.getElementById('blanket').style.transition='none';
+    updateBlanket();
+    if(prog>=1&&!finished){
+      finished=true; vib(120);
+      document.getElementById('blanket').style.transition='top .3s ease';
+      document.getElementById('zzz-wrap').style.display='block';
+      document.getElementById('bed-face').style.filter='drop-shadow(0 0 18px rgba(255,209,102,.5))';
+      document.getElementById('sleep-sub').textContent='Selamat tidur! 💤';
+      document.getElementById('blanket-handle').style.display='none';
+      setTimeout(done,1200);
+    }
+  },{passive:false});
+
+  zone.addEventListener('touchend',function(e){
+    e.preventDefault();
+    startY=null;
+    if(!finished&&prog<.45){
+      prog=0;
+      document.getElementById('blanket').style.transition='top .3s ease';
+      updateBlanket();
+    }
+  },{passive:false});
+
+  // Mouse support for desktop
+  var md=false,msy=0,msp=0;
+  zone.addEventListener('mousedown',function(e){md=true;msy=e.clientY;msp=prog;});
+  window.addEventListener('mousemove',function(e){
+    if(!md||finished)return;
+    var dy=msy-e.clientY;
+    var H=zone.clientHeight||260;
+    prog=Math.max(0,Math.min(1,msp+dy/(H*.6)));
+    document.getElementById('blanket').style.transition='none';
+    updateBlanket();
+    if(prog>=1&&!finished){
+      finished=true; vib(120);
+      document.getElementById('zzz-wrap').style.display='block';
+      document.getElementById('sleep-sub').textContent='Selamat tidur! 💤';
+      setTimeout(done,1200);
+    }
+  });
+  window.addEventListener('mouseup',function(){
+    if(!md)return; md=false;
+    if(!finished&&prog<.45){prog=0;updateBlanket();}
+  });
+}
+
+/* ════════════════════════════════════════════════════════
+   SLEEP MODE
+════════════════════════════════════════════════════════ */
+function startSleepMode(){
+  LUL.start();
+  // Lullaby visualiser
+  var viz=document.getElementById('lullaby-viz');
+  [2,3,5,4,7,5,4,3,5,6].forEach(function(h,i){
+    var b=document.createElement('div');
+    b.style.cssText='width:4px;height:'+(h*4)+'px;border-radius:99px;'
+      +'background:rgba(62,207,184,'+(0.18+i*.028)+');'
+      +'animation:wv '+(0.5+i*.12)+'s '+(i*.08)+'s ease-in-out infinite;transform-origin:bottom;';
+    viz.appendChild(b);
+  });
+  // Fade in content
+  setTimeout(function(){
+    document.getElementById('sleep-content').style.opacity='1';
+  },700);
+  // Dim screen
+  var dim=document.getElementById('sleep-dim');
+  var d=0;
+  var iv=setInterval(function(){
+    d=Math.min(d+.003,.74); dim.style.opacity=d;
+    if(d>=.74)clearInterval(iv);
+  },130);
+}
+
+/* ════════════════════════════════════════════════════════
+   PREVENT PULL-TO-REFRESH & PAGE SCROLL globally
+════════════════════════════════════════════════════════ */
+document.addEventListener('touchmove',function(e){e.preventDefault();},{passive:false});
+document.addEventListener('touchstart',function(e){},{passive:false});
 </script>
 </body>
 </html>
