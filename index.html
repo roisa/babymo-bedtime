@@ -3,907 +3,770 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#04080F">
+<meta name="theme-color" content="#0A1628">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Tidur Yuk!">
-<link rel="manifest" href="manifest.json">
-<title>Tidur Yuk! 🌙</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<title>Baby Mo 🌙</title>
 <style>
-/* ─── RESET ─── */
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;-webkit-touch-callout:none;user-select:none;}
-
-/* ─── DESIGN TOKENS ─── */
+/* ── TOKENS ── */
 :root{
-  --bg:#04080F; --bg2:#080F1C; --surface:#0D1629; --card:#111F3A; --border:#172444;
-  --blue:#4A78FF; --blue-soft:#7EA5FF;
-  --teal:#3ECFB8; --teal-soft:#6EE7D4;
-  --gold:#FFD166; --gold-dim:#CC9A30;
-  --coral:#FF7B72; --purple:#A97FFF; --green:#6EE7C0;
-  --text:#B8CCEE; --text2:#5A7099; --text3:#2C3F60;
-  /* Safe area for notch / home bar */
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bot: env(safe-area-inset-bottom, 0px);
-  --safe-left: env(safe-area-inset-left, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
+  --navy:#0A1628;--navy2:#0F2044;--card:#162A56;--card2:#1A3266;
+  --gold:#FFD93D;--gold2:#F4A832;--green:#4EC94C;
+  --teal:#3ECFB8;--purple:#A97FFF;--blue:#7EA5FF;
+  --text:#FFFFFF;--text2:#A8C4E8;--text3:#5A7AAA;
 }
-
-html,body,#root{width:100%;height:100%;overflow:hidden;position:fixed;inset:0;
-  background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;}
-#root{display:flex;flex-direction:column;}
-
-/* ─── KEYFRAMES ─── */
-@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.8)}50%{opacity:.9;transform:scale(1.3)}}
-@keyframes moonFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-9px) rotate(3deg)}}
-@keyframes moonGlow{0%,100%{filter:drop-shadow(0 0 14px rgba(255,209,102,.35))}50%{filter:drop-shadow(0 0 40px rgba(255,209,102,.75))}}
-@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
-@keyframes bounceIn{0%{opacity:0;transform:scale(.25) rotate(-18deg)}55%{transform:scale(1.2) rotate(6deg)}80%{transform:scale(.92) rotate(-3deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
-@keyframes ringPulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(3);opacity:0}}
-@keyframes wave{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1.25)}}
-@keyframes floatUp{0%{opacity:.6;transform:translateY(0)}100%{opacity:0;transform:translateY(-44px)}}
-@keyframes checkPop{0%{transform:scale(0) rotate(-30deg);opacity:0}60%{transform:scale(1.35) rotate(8deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-@keyframes shine{0%,100%{background-position:200% center}50%{background-position:-200% center}}
-@keyframes starDrift{from{transform:translateY(0)}to{transform:translateY(-16px)}}
-@keyframes completionPulse{0%{box-shadow:0 0 0 0 rgba(110,231,192,.5)}70%{box-shadow:0 0 0 24px rgba(110,231,192,0)}100%{box-shadow:0 0 0 0 rgba(110,231,192,0)}}
+/* ── RESET ── */
+*{margin:0;padding:0;box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+  user-select:none;-webkit-user-select:none;}
+html,body{
+  width:100%;height:100%;
+  overflow:hidden;position:fixed;inset:0;
+  background:var(--navy);
+  font-family:'Nunito','Arial Rounded MT Bold',Arial,sans-serif;
+}
+/* ── SCREENS ── */
+.scr{display:none;position:fixed;inset:0;}
+.scr.on{display:flex;flex-direction:column;}
+/* ── ANIMS ── */
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.6)}50%{opacity:.95;transform:scale(1.4)}}
+@keyframes fl{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes pu{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes su{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pk{0%{transform:scale(0) rotate(-15deg);opacity:0}65%{transform:scale(1.18) rotate(5deg)}100%{transform:scale(1);opacity:1}}
+@keyframes rp{to{transform:scale(5);opacity:0}}
+@keyframes wv{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
+@keyframes zf{0%{opacity:.7;transform:translateY(0)}100%{opacity:0;transform:translateY(-38px)}}
+@keyframes bth{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+/* ── PROGRESS BAR ── */
+.topbar{display:flex;align-items:center;gap:12px;padding:16px 22px 4px;flex-shrink:0;}
+.ptrack{flex:1;height:12px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;}
+.pfill{height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--green),#8EF08C);
+  transition:width .6s cubic-bezier(.34,1.56,.64,1);width:0%;}
+/* ── STEP HEADER ── */
+.shead{text-align:center;padding:10px 24px 0;flex-shrink:0;}
+.snum{font-size:11px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:5px;}
+.stitle{font-size:27px;font-weight:900;color:white;line-height:1.2;}
+.shint{font-size:14px;color:var(--text2);margin-top:5px;line-height:1.4;}
+/* ── GOLD BUTTON ── */
+.gbtn{
+  background:linear-gradient(135deg,#FFD93D,#F4A832);
+  border:none;border-radius:100px;padding:18px 48px;
+  font-family:inherit;font-size:20px;font-weight:900;color:#0A1628;
+  cursor:pointer;display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 6px 28px rgba(255,217,61,.45);
+  animation:pu 2.5s ease-in-out infinite;
+  touch-action:manipulation;
+}
+/* ── PJ ITEMS ── */
+.pjgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:330px;}
+.pjitem{
+  background:rgba(255,255,255,.07);border:2.5px solid rgba(255,255,255,.12);
+  border-radius:24px;padding:22px 14px;text-align:center;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  touch-action:manipulation;
+}
+/* ── DUA LINES ── */
+.dualine{
+  background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.12);
+  border-radius:20px;padding:18px 20px;cursor:pointer;
+  position:relative;overflow:hidden;
+  transition:all .35s cubic-bezier(.34,1.56,.64,1);
+  touch-action:manipulation;margin-bottom:11px;
+}
+.dualine.locked{opacity:.28;cursor:default;pointer-events:none;}
+.dualine.active{border-color:rgba(255,217,61,.7);background:rgba(255,217,61,.1);}
+.dualine.finished{border-color:rgba(78,201,76,.6);background:rgba(78,201,76,.09);}
+/* ── BED ── */
+.bedframe{
+  background:var(--card);border:2px solid var(--card2);
+  border-radius:26px;overflow:hidden;
+  width:100%;max-width:290px;height:210px;
+  position:relative;flex-shrink:0;
+}
+/* ── BLANKET ── */
+.blkout{position:absolute;left:0;right:0;bottom:0;transition:top .3s ease;}
+.blkbody{position:absolute;inset:0;
+  background:linear-gradient(160deg,#1A3E8C,#122B6A 30%,#1E3F8A 60%,#122B6A);
+  overflow:hidden;}
+.blkpat{position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 12px,transparent 12px,transparent 24px);}
+.blkfold{position:absolute;top:0;left:0;right:0;height:18px;
+  background:linear-gradient(135deg,#2A5AB8,#1E3E90);border-radius:2px 2px 0 0;}
+.blkgrip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:48px;height:5px;border-radius:99px;background:rgba(168,196,232,.55);}
+/* ── RIPPLE ── */
+.ripel{position:absolute;border-radius:50%;pointer-events:none;
+  animation:rp .6s ease forwards;}
+/* ── DONE BANNER ── */
+.donebanner{text-align:center;padding:12px 24px;flex-shrink:0;animation:su .5s ease;}
 </style>
 </head>
 <body>
-<div id="root"></div>
 
-<!-- ─── NATIVE BRIDGE ─── -->
-<!-- Capacitor injects capacitor.js automatically at runtime.
-     navigator.vibrate() is used as a cross-browser haptic fallback. -->
+<!-- STARS (filled by JS) -->
+<div id="stars" style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;"></div>
 
-<script type="text/babel" data-presets="react">
-/* ═══════════════════════════════════════════════════════════════
-   BABY MO — BEDTIME RITUAL  v2.0
-   React 18 · Web Audio · Wake Lock · Vibration · Capacitor-ready
-═══════════════════════════════════════════════════════════════ */
-const {useState,useEffect,useRef,useCallback,useMemo,memo}=React;
+<!-- ══════════ HOME ══════════ -->
+<div id="s-home" class="scr on" style="background:linear-gradient(165deg,#04080F,#0C1B3A 50%,#0A183A);">
+  <div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
+    align-items:center;justify-content:space-between;padding:44px 28px 48px;">
 
-/* ─── NATIVE HELPERS ─────────────────────────────────────── */
-// Works in browser (Android Chrome) AND inside Capacitor APK
-function vibrate(ms=40){
-  try{
-    if(window.Capacitor?.Plugins?.Haptics){
-      const {Haptics,ImpactStyle}=window.Capacitor.Plugins;
-      Haptics.impact({style:ms>80?ImpactStyle.Heavy:ms>50?ImpactStyle.Medium:ImpactStyle.Light});
-    } else {
-      navigator.vibrate?.(ms);
-    }
-  }catch(e){}
-}
+    <div style="text-align:center;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--text3);">Baby Mo</div>
+    </div>
 
-// Keep screen on during ritual
-let wakeLock=null;
-async function requestWakeLock(){
-  try{
-    if('wakeLock' in navigator){
-      wakeLock=await navigator.wakeLock.request('screen');
-    }
-  }catch(e){}
-}
-async function releaseWakeLock(){
-  try{await wakeLock?.release(); wakeLock=null;}catch(e){}
-}
+    <!-- CHARACTER -->
+    <div style="text-align:center;animation:fl 3.5s ease-in-out infinite;">
+      <svg width="170" height="190" viewBox="0 0 170 190">
+        <!-- Body -->
+        <ellipse cx="85" cy="170" rx="56" ry="26" fill="#3D7A2E"/>
+        <ellipse cx="85" cy="148" rx="52" ry="40" fill="#4A9438"/>
+        <!-- Head -->
+        <circle cx="85" cy="86" r="55" fill="#F5C895"/>
+        <!-- Bear ears -->
+        <circle cx="27" cy="44" r="19" fill="#4A9438"/>
+        <circle cx="27" cy="44" r="11" fill="#5DB347"/>
+        <circle cx="27" cy="44" r="6" fill="#78CC64"/>
+        <circle cx="143" cy="44" r="19" fill="#4A9438"/>
+        <circle cx="143" cy="44" r="11" fill="#5DB347"/>
+        <circle cx="143" cy="44" r="6" fill="#78CC64"/>
+        <!-- Eyes -->
+        <circle cx="64" cy="78" r="15" fill="white"/>
+        <circle cx="106" cy="78" r="15" fill="white"/>
+        <circle cx="66" cy="79" r="10" fill="#1C1008"/>
+        <circle cx="108" cy="79" r="10" fill="#1C1008"/>
+        <circle cx="69" cy="76" r="3.5" fill="white"/>
+        <circle cx="111" cy="76" r="3.5" fill="white"/>
+        <!-- Nose -->
+        <ellipse cx="85" cy="96" rx="7.5" ry="5" fill="#E8956A"/>
+        <!-- Smile -->
+        <path d="M64 110 Q85 130 106 110" fill="none" stroke="#C17045" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Cheeks -->
+        <circle cx="46" cy="100" r="14" fill="#FFB8A0" opacity=".42"/>
+        <circle cx="124" cy="100" r="14" fill="#FFB8A0" opacity=".42"/>
+        <!-- Hoodie strings -->
+        <line x1="77" y1="126" x2="73" y2="150" stroke="#3A6A28" stroke-width="3.5" stroke-linecap="round"/>
+        <line x1="93" y1="126" x2="97" y2="150" stroke="#3A6A28" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- Arms -->
+        <ellipse cx="142" cy="124" rx="13" ry="19" fill="#F5C895" transform="rotate(28 142 124)"/>
+        <ellipse cx="28" cy="128" rx="13" ry="17" fill="#F5C895" transform="rotate(-20 28 128)"/>
+        <!-- Stars -->
+        <text x="150" y="72" font-size="18" fill="#FFD93D" opacity=".9">⭐</text>
+        <text x="4"   y="95" font-size="13" fill="#A8C4E8" opacity=".55">✦</text>
+        <text x="148" y="170" font-size="14" fill="#A8C4E8" opacity=".4">✦</text>
+      </svg>
+    </div>
 
-// Capacitor init (status bar, splash)
-window.addEventListener('load',async()=>{
-  if(window.Capacitor?.isNative){
-    try{
-      const {StatusBar}=window.Capacitor.Plugins;
-      await StatusBar?.setStyle({style:'DARK'});
-      await StatusBar?.setBackgroundColor({color:'#04080F'});
-    }catch(e){}
-    try{
-      const {SplashScreen}=window.Capacitor.Plugins;
-      await SplashScreen?.hide({fadeOutDuration:600});
-    }catch(e){}
+    <div style="text-align:center;">
+      <div style="font-size:38px;font-weight:900;color:white;line-height:1.1;margin-bottom:10px;">
+        Waktunya<br>Tidur! 🌙
+      </div>
+      <div style="font-size:16px;color:var(--text2);margin-bottom:36px;">
+        4 langkah malam bersama Baby Mo ⭐
+      </div>
+      <!-- Step icons -->
+      <div style="display:flex;justify-content:center;gap:22px;margin-bottom:32px;">
+        <div style="text-align:center;opacity:.5;animation:su .4s .1s ease both;">
+          <div style="font-size:28px;">🪥</div><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:3px;">Gosok<br>Gigi</div>
+        </div>
+        <div style="text-align:center;opacity:.5;animation:su .4s .2s ease both;">
+          <div style="font-size:28px;">👕</div><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:3px;">Ganti<br>Baju</div>
+        </div>
+        <div style="text-align:center;opacity:.5;animation:su .4s .3s ease both;">
+          <div style="font-size:28px;">🤲</div><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:3px;">Baca<br>Doa</div>
+        </div>
+        <div style="text-align:center;opacity:.5;animation:su .4s .4s ease both;">
+          <div style="font-size:28px;">💤</div><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:3px;">Tidur<br>Yuk</div>
+        </div>
+      </div>
+      <button class="gbtn" id="btn-start">▶ &nbsp;Mulai Tidur</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ STEPS ══════════ -->
+<div id="s-steps" class="scr" style="background:linear-gradient(165deg,#04080F,#0C1B3A 60%,#0A183A);">
+  <div class="topbar" style="position:relative;z-index:2;">
+    <button id="btn-home" style="background:rgba(255,255,255,.1);border:none;border-radius:12px;
+      padding:6px 12px;color:white;font-size:18px;cursor:pointer;touch-action:manipulation;">🏠</button>
+    <div class="ptrack"><div class="pfill" id="pfill"></div></div>
+    <div style="font-size:22px;">⭐</div>
+  </div>
+  <div id="stepbody" style="flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:2;"></div>
+</div>
+
+<!-- ══════════ SLEEP ══════════ -->
+<div id="s-sleep" class="scr" style="background:linear-gradient(165deg,#02030C,#040818);">
+  <div id="sleepdim" style="position:absolute;inset:0;background:#000;opacity:0;z-index:2;pointer-events:none;"></div>
+  <div id="sleepcontent" style="position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:14px;opacity:0;transition:opacity 1.2s;padding:40px;">
+    <!-- Sleeping Baby Mo -->
+    <div style="animation:bth 4s ease-in-out infinite;margin-bottom:6px;">
+      <svg width="148" height="130" viewBox="0 0 148 130">
+        <circle cx="74" cy="70" r="48" fill="#F5C895"/>
+        <circle cx="20" cy="30" r="16" fill="#4A9438"/><circle cx="20" cy="30" r="9" fill="#5DB347"/>
+        <circle cx="128" cy="30" r="16" fill="#4A9438"/><circle cx="128" cy="30" r="9" fill="#5DB347"/>
+        <!-- Closed eyes (arcs) -->
+        <path d="M 50 62 Q 62 72 74 62" fill="none" stroke="#1C1008" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M 74 62 Q 86 72 98 62" fill="none" stroke="#1C1008" stroke-width="3.5" stroke-linecap="round"/>
+        <ellipse cx="74" cy="80" rx="6.5" ry="4.5" fill="#E8956A"/>
+        <path d="M 57 92 Q 74 106 91 92" fill="none" stroke="#C17045" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="42" cy="82" r="12" fill="#FFB8A0" opacity=".4"/>
+        <circle cx="106" cy="82" r="12" fill="#FFB8A0" opacity=".4"/>
+        <ellipse cx="74" cy="118" rx="44" ry="16" fill="#3D7A2E" opacity=".7"/>
+        <ellipse cx="74" cy="108" rx="42" ry="24" fill="#4A9438"/>
+      </svg>
+    </div>
+    <div style="font-size:54px;animation:fl 4s ease-in-out infinite;">🌙</div>
+    <div style="font-size:28px;font-weight:900;color:rgba(200,220,255,.6);text-align:center;">Good night,<br>little one... 💫</div>
+    <div style="font-size:15px;color:rgba(120,160,210,.42);text-align:center;">Mimpi yang indah ya 🌟</div>
+    <div style="display:flex;gap:14px;margin-top:4px;">
+      <div style="font-size:16px;font-weight:900;color:rgba(126,165,255,.3);animation:zf 1.6s 0s ease infinite;">Z</div>
+      <div style="font-size:26px;font-weight:900;color:rgba(126,165,255,.4);animation:zf 2s .45s ease infinite;">Z</div>
+      <div style="font-size:36px;font-weight:900;color:rgba(126,165,255,.48);animation:zf 2.4s .9s ease infinite;">Z</div>
+    </div>
+    <div id="viz" style="display:flex;gap:5px;align-items:flex-end;height:36px;margin-top:8px;"></div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════
+   BABY MO — Pure HTML5 + Pointer Events API
+   KEY FIX: Using Pointer Events instead of Touch Events
+   + touch-action:none CSS — works in iframes, all browsers
+════════════════════════════════════════════════════ */
+
+/* ── STARS ── */
+(function(){
+  var c=document.getElementById('stars');
+  for(var i=0;i<65;i++){
+    var s=document.createElement('div');
+    var z=.5+Math.random()*2.6;
+    s.style.cssText='position:absolute;border-radius:50%;background:#D4EEFF;'
+      +'width:'+z+'px;height:'+z+'px;left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;'
+      +'opacity:'+(0.1+Math.random()*.9)+';'
+      +'animation:tw '+(2+Math.random()*4)+'s '+(Math.random()*6)+'s infinite ease-in-out;';
+    c.appendChild(s);
   }
-  // Register service worker for offline support
-  try{
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('sw.js');
-    }
-  }catch(e){}
-});
+})();
 
-/* ─── SPEECH ─────────────────────────────────────────────── */
-function speak(text,lang='ar-SA'){
+/* ── VIB ── */
+function vib(p){try{navigator.vibrate&&navigator.vibrate(p||40);}catch(e){}}
+
+/* ── SPEAK ── */
+function speak(txt){
   try{
-    window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(text);
-    u.lang=lang; u.rate=.5; u.pitch=1.1; u.volume=1;
-    window.speechSynthesis.speak(u);
+    if(window.speechSynthesis){
+      window.speechSynthesis.cancel();
+      var u=new SpeechSynthesisUtterance(txt);
+      u.lang='ar-SA';u.rate=.45;u.pitch=1.1;u.volume=1;
+      window.speechSynthesis.speak(u);
+    }
   }catch(e){}
 }
 
-/* ─── LULLABY ENGINE ─────────────────────────────────────── */
-const Lullaby=(()=>{
-  let ctx=null,gain=null,active=false,timer=null,next=0,i=0;
-  // G pentatonic lullaby — soft, low, dreamlike
-  const N=[
-    [196,.7],[220,.7],[247,.5],[196,.2],
-    [220,.8],[294,.7],[330,.5],[294,.2],
-    [220,.7],[196,.5],[247,.3],[196,.2],
-    [165,1.2],[0,.4],
-    [196,.6],[220,.6],[247,.4],[294,.6],
-    [330,.8],[294,.5],[247,.5],[220,.5],
-    [196,1.5],[0,.8],
-  ];
-  function note(freq,t,d){
-    if(!freq||!gain)return;
-    const o=ctx.createOscillator(),e=ctx.createGain();
-    const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=500;
-    o.type='sine'; o.frequency.value=freq;
-    o.connect(f); f.connect(e); e.connect(gain);
-    e.gain.setValueAtTime(0,t);
-    e.gain.linearRampToValueAtTime(.65,t+Math.min(.06,d*.12));
-    e.gain.exponentialRampToValueAtTime(.001,t+d-.04);
-    o.start(t); o.stop(t+d);
+/* ── LULLABY ── */
+var LUL=(function(){
+  var ctx,gain,on=false,tm,ni=0,nt=0;
+  var N=[[196,.8],[220,.8],[247,.6],[196,.2],[220,.9],[294,.8],[330,.6],[294,.2],
+         [220,.8],[196,.6],[247,.4],[196,.2],[165,1.4],[0,.5],
+         [196,.7],[220,.7],[247,.5],[294,.7],[330,.9],[294,.6],[247,.6],[220,.6],[196,1.7],[0,.9]];
+  function note(f,s,d){
+    if(!f||!gain)return;
+    var o=ctx.createOscillator(),e=ctx.createGain(),fl=ctx.createBiquadFilter();
+    fl.type='lowpass';fl.frequency.value=500;o.type='sine';o.frequency.value=f;
+    o.connect(fl);fl.connect(e);e.connect(gain);
+    e.gain.setValueAtTime(0,s);
+    e.gain.linearRampToValueAtTime(.55,s+Math.min(.07,d*.15));
+    e.gain.exponentialRampToValueAtTime(.001,s+d-.05);
+    o.start(s);o.stop(s+d);
   }
   function tick(){
-    while(next<ctx.currentTime+.6){
-      const[f,d]=N[i%N.length]; note(f,next,d); next+=d; i++;
-    }
-    if(active) timer=setTimeout(tick,200);
+    while(nt<ctx.currentTime+.7){var n=N[ni%N.length];note(n[0],nt,n[1]);nt+=n[1];ni++;}
+    if(on)tm=setTimeout(tick,200);
   }
   return{
-    start(){
-      if(active)return;
-      try{
-        ctx=new(window.AudioContext||window.webkitAudioContext)();
-        gain=ctx.createGain(); gain.gain.setValueAtTime(0,ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(.2,ctx.currentTime+5);
-        gain.connect(ctx.destination);
-        next=ctx.currentTime+1; i=0; active=true; tick();
-      }catch(e){}
-    },
-    stop(){
-      active=false; clearTimeout(timer);
-      if(gain&&ctx){
-        gain.gain.linearRampToValueAtTime(0,ctx.currentTime+2.5);
-        setTimeout(()=>{try{ctx.close();}catch(e){}ctx=null;},3200);
-      }
-    }
+    start:function(){if(on)return;try{
+      ctx=new(window.AudioContext||window.webkitAudioContext)();
+      gain=ctx.createGain();gain.gain.setValueAtTime(0,ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(.22,ctx.currentTime+6);
+      gain.connect(ctx.destination);nt=ctx.currentTime+1.2;ni=0;on=true;tick();
+    }catch(e){}},
+    stop:function(){on=false;clearTimeout(tm);
+      if(gain&&ctx){gain.gain.linearRampToValueAtTime(0,ctx.currentTime+2.5);
+        setTimeout(function(){try{ctx.close();}catch(e){}ctx=null;},3500);}},
   };
 })();
 
-/* ─── STEPS META ─────────────────────────────────────────── */
-const STEPS=[
-  {id:'brush',   label:'Gosok Gigi', emoji:'🪥', color:'#3ECFB8'},
-  {id:'pajamas', label:'Ganti Baju',  emoji:'👕', color:'#A97FFF'},
-  {id:'doa',     label:'Baca Doa',   emoji:'🤲', color:'#FFD166'},
-  {id:'tidur',   label:'Tidur',      emoji:'💤', color:'#4A78FF'},
-];
+/* ── SCREENS ── */
+function show(id){
+  document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
+  document.getElementById('s-'+id).classList.add('on');
+}
 
-/* ─── STAR FIELD ─────────────────────────────────────────── */
-const StarField=memo(({count=55,drift=false})=>{
-  const stars=useMemo(()=>Array.from({length:count},(_,id)=>({
-    id,x:Math.random()*100,y:Math.random()*100,
-    s:.6+Math.random()*2.2,dur:2+Math.random()*4,
-    delay:Math.random()*5,op:.15+Math.random()*.85,
-  })),[count]);
-  return(
-    <div style={{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',zIndex:0}}>
-      {stars.map(({id,x,y,s,dur,delay,op})=>(
-        <div key={id} style={{
-          position:'absolute',left:x+'%',top:y+'%',
-          width:s+'px',height:s+'px',borderRadius:'50%',
-          background:'#D4E8FF',opacity:op,
-          animation:`twinkle ${dur}s ${delay}s infinite ease-in-out`
-            +(drift?`, starDrift ${7+dur}s ${delay}s infinite alternate ease-in-out`:''),
-        }}/>
-      ))}
-    </div>
-  );
+/* ── HOME ── */
+document.getElementById('btn-start').addEventListener('click',function(){
+  vib(60);show('steps');runStep(0);
+});
+document.getElementById('btn-home').addEventListener('click',function(){
+  vib(40);show('home');
 });
 
-/* ─── STEP DOTS ──────────────────────────────────────────── */
-function StepDots({current}){
-  return(
-    <div style={{
-      display:'flex',gap:7,justifyContent:'center',
-      paddingTop:`calc(14px + var(--safe-top))`,
-      paddingBottom:4,position:'relative',zIndex:2,
-    }}>
-      {STEPS.map(({id,color},i)=>{
-        const done=i<current,active=i===current;
-        return(
-          <div key={id} style={{
-            height:8,borderRadius:99,
-            width:active?28:8,
-            background:done?color:active?'#7EA5FF':'var(--border)',
-            transition:'all .45s cubic-bezier(.34,1.56,.64,1)',
-            boxShadow:active?`0 0 12px ${color}90`:'none',
-          }}/>
-        );
-      })}
-    </div>
-  );
+/* ── PROGRESS ── */
+function setP(idx){
+  document.getElementById('pfill').style.width=(idx/4*100)+'%';
 }
 
-/* ─── STEP HEADER ────────────────────────────────────────── */
-function StepHeader({idx,title,subtitle}){
-  return(
-    <div style={{padding:'18px 28px 0',textAlign:'center',position:'relative',zIndex:2}}>
-      <div style={{fontSize:11,fontWeight:800,color:'var(--text3)',letterSpacing:2.5,
-        textTransform:'uppercase',marginBottom:6}}>
-        Langkah {idx+1} dari {STEPS.length}
-      </div>
-      <div style={{fontFamily:"'Baloo 2',cursive",fontSize:25,fontWeight:800,
-        color:'var(--text)',lineHeight:1.2,marginBottom:4}}>
-        {STEPS[idx].emoji}&nbsp;{title}
-      </div>
-      <div style={{fontSize:14,color:'var(--text2)',lineHeight:1.5}}>{subtitle}</div>
-    </div>
-  );
+/* ── STEP ENGINE ── */
+var BUILDERS=[buildBrush,buildPajamas,buildDoa,buildBlanket];
+
+function runStep(idx){
+  setP(idx);
+  var body=document.getElementById('stepbody');
+  body.innerHTML='';
+  body.style.cssText='flex:1;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(30px);';
+  BUILDERS[idx](body,function(){
+    body.style.cssText='flex:1;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(-24px);transition:all .38s ease;';
+    setTimeout(function(){
+      if(idx+1<BUILDERS.length){runStep(idx+1);}
+      else{show('sleep');startSleep();}
+    },400);
+  });
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    body.style.cssText='flex:1;display:flex;flex-direction:column;overflow:hidden;'
+      +'opacity:1;transform:translateY(0);transition:all .5s cubic-bezier(.34,1.56,.64,1);';
+  });});
 }
 
-/* ─── FADE-IN WRAPPER ────────────────────────────────────── */
-function FadeIn({children,delay=40}){
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setVis(true),delay);return()=>clearTimeout(t);},[delay]);
-  return(
-    <div style={{
-      flex:1,display:'flex',flexDirection:'column',
-      opacity:vis?1:0,transform:vis?'none':'translateY(26px)',
-      transition:'all .55s cubic-bezier(.34,1.56,.64,1)',
-    }}>{children}</div>
-  );
+/* ── RIPPLE ── */
+function addRipple(el,e,color){
+  var r=document.createElement('div');
+  r.className='ripel';
+  var rect=el.getBoundingClientRect();
+  var x=e.clientX-rect.left, y=e.clientY-rect.top;
+  var sz=Math.max(rect.width,rect.height)*2;
+  r.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(x-sz/2)+'px;top:'+(y-sz/2)+'px;'
+    +'background:'+(color||'rgba(255,255,255,.3)')+';';
+  el.appendChild(r);
+  setTimeout(function(){r.remove();},700);
 }
 
-/* ══════════════════════════════════════════════════════════
-   STEP 1 — BRUSH TEETH  (swipe left ↔ right)
-══════════════════════════════════════════════════════════ */
-function BrushTeeth({onComplete}){
-  const NEEDED=7;
-  const[strokes,setStrokes]=useState(0);
-  const[brushX,setBrushX]=useState(50);
-  const[done,setDone]=useState(false);
-  const[face,setFace]=useState('😐');
-  const[gleam,setGleam]=useState(false);
-  const txStart=useRef(null), lastDir=useRef(null), trackRef=useRef(null);
-  const FACES=['😐','🙂','😊','😄','🤩','⭐','😁'];
-  const prog=Math.min(strokes/NEEDED,1);
-  const tw=`hsl(${200-prog*200},${20+prog*60}%,${52+prog*32}%)`;
+/* ══════════════════════════════════════════════════
+   STEP 1 — BRUSH TEETH
+   POINTER EVENTS: pointerdown / pointermove / pointerup
+   + setPointerCapture for continuous tracking
+   + touch-action:none on element (CSS approach)
+══════════════════════════════════════════════════ */
+function buildBrush(wrap,done){
+  var NEED=7, count=0, bx=50, finished=false;
+  var pdown=false, refX=0, lastDir=null, moveX=0;
+  var FACES=['😐','🙂','😊','😄','🤩','✨','😁'];
 
-  useEffect(()=>{if(strokes>=NEEDED&&!done){setDone(true);vibrate(100);setTimeout(onComplete,1000);}},[strokes,done,onComplete]);
+  wrap.innerHTML=
+    '<div class="shead">'
+      +'<div class="snum">Langkah 1 dari 4</div>'
+      +'<div class="stitle">🪥 Gosok Gigi</div>'
+      +'<div class="shint">Geser kiri ← → kanan untuk menyikat!</div>'
+    +'</div>'
+    /* Baby Mo at sink SVG */
+    +'<div style="display:flex;justify-content:center;padding:8px 0;flex-shrink:0;">'
+      +'<svg width="150" height="130" viewBox="0 0 150 130">'
+        +'<ellipse cx="75" cy="120" rx="46" ry="18" fill="#3D7A2E"/>'
+        +'<ellipse cx="75" cy="104" rx="44" ry="30" fill="#4A9438"/>'
+        +'<circle cx="75" cy="64" r="46" fill="#F5C895"/>'
+        +'<circle cx="24" cy="28" r="16" fill="#4A9438"/><circle cx="24" cy="28" r="9.5" fill="#5DB347"/>'
+        +'<circle cx="126" cy="28" r="16" fill="#4A9438"/><circle cx="126" cy="28" r="9.5" fill="#5DB347"/>'
+        +'<circle cx="56" cy="58" r="13" fill="white"/><circle cx="94" cy="58" r="13" fill="white"/>'
+        +'<circle cx="58" cy="59" r="8.5" fill="#1C1008"/><circle cx="96" cy="59" r="8.5" fill="#1C1008"/>'
+        +'<circle cx="61" cy="56" r="3" fill="white"/><circle cx="99" cy="56" r="3" fill="white"/>'
+        +'<ellipse cx="75" cy="74" rx="6.5" ry="5" fill="#E8956A"/>'
+        /* open mouth with teeth */
+        +'<path d="M55 84 Q75 102 95 84" fill="#160606"/>'
+        +'<rect id="t0" x="57" y="79" width="10" height="12" rx="3"/>'
+        +'<rect id="t1" x="69" y="77" width="12" height="14" rx="3"/>'
+        +'<rect id="t2" x="83" y="79" width="10" height="12" rx="3"/>'
+        +'<circle cx="42" cy="74" r="12" fill="#FFB8A0" opacity=".42"/>'
+        +'<circle cx="108" cy="74" r="12" fill="#FFB8A0" opacity=".42"/>'
+        /* arm with toothbrush */
+        +'<rect x="98" y="60" width="14" height="36" rx="7" fill="#F5C895" transform="rotate(22 105 78)"/>'
+        +'<rect x="110" y="52" width="7" height="28" rx="3.5" fill="#4A9438" transform="rotate(22 113 66)"/>'
+        +'<rect x="114" y="46" width="20" height="7" rx="3.5" fill="#78CC64" transform="rotate(22 124 49)"/>'
+      +'</svg>'
+    +'</div>'
+    /* Progress */
+    +'<div style="padding:0 24px;flex-shrink:0;">'
+      +'<div style="background:rgba(255,255,255,.1);border-radius:99px;height:9px;overflow:hidden;margin-bottom:5px;">'
+        +'<div id="bprog" style="height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,var(--teal),#7EE8DC);transition:width .3s;"></div>'
+      +'</div>'
+      +'<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:800;color:var(--text3);">'
+        +'<span>Mulai</span><span id="bcnt" style="color:var(--teal);">0/'+NEED+'</span><span>Bersih ✓</span>'
+      +'</div>'
+    +'</div>'
+    /* SWIPE ZONE — touch-action:none is THE key CSS rule */
+    +'<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:10px 24px;">'
+      +'<div style="width:100%;max-width:320px;">'
+        +'<div id="bzone" style="position:relative;height:90px;border-radius:22px;'
+          +'background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);'
+          +'touch-action:none;cursor:grab;overflow:hidden;">'
+          +'<div style="position:absolute;top:50%;left:12px;right:12px;height:3px;'
+            +'background:rgba(255,255,255,.15);border-radius:99px;transform:translateY(-50%);"></div>'
+          +'<div id="bfill" style="position:absolute;top:50%;left:12px;width:0%;height:3px;'
+            +'background:linear-gradient(90deg,var(--teal),transparent);transform:translateY(-50%);"></div>'
+          +'<div id="bbrush" style="position:absolute;top:50%;left:50%;font-size:46px;line-height:1;'
+            +'transform:translateX(-50%) translateY(-50%) rotate(22deg);pointer-events:none;'
+            +'filter:drop-shadow(0 3px 14px rgba(62,207,184,.55));">🪥</div>'
+          +'<div id="barrows" style="position:absolute;bottom:8px;left:0;right:0;pointer-events:none;'
+            +'display:flex;justify-content:space-between;padding:0 18px;'
+            +'font-size:22px;color:rgba(255,255,255,.25);animation:pu 1.8s infinite;">'
+            +'<span>←</span><span>→</span>'
+          +'</div>'
+        +'</div>'
+        +'<div id="breact" style="text-align:center;margin-top:10px;font-size:24px;min-height:30px;"></div>'
+      +'</div>'
+    +'</div>'
+    +'<div id="bdone" style="display:none;" class="donebanner">'
+      +'<div style="font-size:44px;">✨😁✨</div>'
+      +'<div style="font-size:22px;font-weight:900;color:var(--teal);">Gigi bersih &amp; putih!</div>'
+    +'</div>';
 
-  const onTS=useCallback(e=>{e.preventDefault();txStart.current=e.touches[0].clientX;},[]);
-  const onTM=useCallback(e=>{
-    e.preventDefault(); if(txStart.current===null)return;
-    const dx=e.touches[0].clientX-txStart.current;
-    const W=trackRef.current?.clientWidth||280;
-    setBrushX(p=>Math.max(8,Math.min(92,p+(dx/W)*100)));
-    txStart.current=e.touches[0].clientX;
-  },[]);
-  const onTE=useCallback(e=>{
-    e.preventDefault();
-    const dx=e.changedTouches[0].clientX-(txStart.current||0);
-    if(Math.abs(dx)>40){
-      const dir=dx>0?'R':'L';
-      if(dir!==lastDir.current){
-        lastDir.current=dir;
-        vibrate(35);
-        setStrokes(s=>{ const n=Math.min(s+1,NEEDED);
-          setFace(FACES[Math.min(n,6)]); setGleam(true);
-          setTimeout(()=>setGleam(false),350); return n; });
+  /* Tooth color */
+  function refreshTeeth(){
+    var p=count/NEED;
+    var c='hsl('+(190-p*185)+','+(30+p*55)+'%,'+(44+p*38)+'%)';
+    ['t0','t1','t2'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el)el.setAttribute('fill',c);
+    });
+  }
+  refreshTeeth();
+
+  function addStroke(dir){
+    if(dir===lastDir||finished)return;
+    lastDir=dir; count=Math.min(count+1,NEED); vib(35);
+    document.getElementById('bcnt').textContent=count+'/'+NEED;
+    document.getElementById('bprog').style.width=(count/NEED*100)+'%';
+    document.getElementById('breact').textContent=FACES[Math.min(count,6)];
+    refreshTeeth();
+    if(count>=NEED&&!finished){
+      finished=true; vib(100);
+      var arrows=document.getElementById('barrows');
+      if(arrows)arrows.style.display='none';
+      document.getElementById('breact').textContent='😁 Bersih!';
+      document.getElementById('bdone').style.display='block';
+      setTimeout(done,1100);
+    }
+  }
+
+  function updateBrush(){
+    var el=document.getElementById('bbrush');
+    var fill=document.getElementById('bfill');
+    if(!el)return;
+    el.style.left=bx+'%';
+    el.style.transform='translateX(-50%) translateY(-50%) rotate('+(bx>50?-26:26)+'deg)';
+    if(fill)fill.style.width=Math.max(0,bx-12)/76*100+'%';
+  }
+
+  var zone=document.getElementById('bzone');
+
+  /* ★ POINTER EVENTS — the correct modern approach ★ */
+  zone.addEventListener('pointerdown',function(e){
+    pdown=true;
+    refX=e.clientX; moveX=e.clientX;
+    lastDir=null;
+    zone.setPointerCapture(e.pointerId);
+  });
+
+  zone.addEventListener('pointermove',function(e){
+    if(!pdown)return;
+    /* Smooth brush movement */
+    var dx=e.clientX-moveX; moveX=e.clientX;
+    bx=Math.max(10,Math.min(90,bx+(dx/zone.clientWidth)*115));
+    updateBrush();
+    /* Direction change detection from refX */
+    var total=e.clientX-refX;
+    if(total>38&&lastDir!=='R'){addStroke('R');lastDir='R';refX=e.clientX;}
+    else if(total<-38&&lastDir!=='L'){addStroke('L');lastDir='L';refX=e.clientX;}
+  });
+
+  zone.addEventListener('pointerup',function(){
+    pdown=false;
+    if(!finished){bx=50;updateBrush();}
+  });
+  zone.addEventListener('pointercancel',function(){
+    pdown=false;
+    if(!finished){bx=50;updateBrush();}
+  });
+}
+
+/* ══════════════════════════════════════════════════
+   STEP 2 — PAJAMAS (tap items)
+══════════════════════════════════════════════════ */
+function buildPajamas(wrap,done){
+  var items=[
+    {emoji:'👕',label:'Baju Tidur',  color:'#A97FFF'},
+    {emoji:'🩲',label:'Celana Tidur', color:'#7EA5FF'},
+    {emoji:'🧸',label:'Boneka',       color:'#FFD93D'},
+  ];
+  var tapped=0;
+
+  wrap.innerHTML=
+    '<div class="shead">'
+      +'<div class="snum">Langkah 2 dari 4</div>'
+      +'<div class="stitle">👕 Ganti Baju</div>'
+      +'<div class="shint">Ketuk setiap baju untuk memakainya!</div>'
+    +'</div>'
+    /* Mini Baby Mo */
+    +'<div style="display:flex;justify-content:center;padding:8px 0;flex-shrink:0;">'
+      +'<div id="pjchar" style="font-size:72px;transition:all .5s;">🧒</div>'
+    +'</div>'
+    +'<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:8px 24px;">'
+      +'<div class="pjgrid" id="pjgrid"></div>'
+    +'</div>'
+    +'<div id="pjdone" style="display:none;" class="donebanner">'
+      +'<div style="font-size:44px;">🌙✨</div>'
+      +'<div style="font-size:22px;font-weight:900;color:var(--purple);">Siap untuk tidur!</div>'
+    +'</div>';
+
+  var grid=document.getElementById('pjgrid');
+  items.forEach(function(item,i){
+    var el=document.createElement('div');
+    el.className='pjitem';
+    if(i===2)el.style.gridColumn='1/-1';
+    el.innerHTML='<div style="font-size:54px;line-height:1;margin-bottom:8px;transition:all .3s;">'
+      +item.emoji+'</div>'
+      +'<div style="font-size:13px;font-weight:800;color:var(--text2);transition:color .3s;">'
+      +item.label+'</div>';
+
+    function tap(e){
+      if(el.dataset.done)return;
+      el.dataset.done='1'; tapped++; vib(45);
+      addRipple(el,e,item.color+'44');
+      el.style.borderColor=item.color;
+      el.style.background=item.color+'18';
+      el.style.transform='scale(.96)';
+      el.querySelector('div').textContent='✅';
+      el.querySelector('div').style.animation='pk .5s cubic-bezier(.34,1.56,.64,1)';
+      el.querySelectorAll('div')[1].textContent='Sudah! ✓';
+      el.querySelectorAll('div')[1].style.color=item.color;
+      if(tapped>=items.length){
+        document.getElementById('pjchar').textContent='🌙';
+        document.getElementById('pjdone').style.display='block';
+        vib([70,35,70]); setTimeout(done,800);
       }
     }
-    txStart.current=null; if(!done) setBrushX(50);
-  },[done]);
-
-  return(
-    <FadeIn>
-      <StepHeader idx={0} title="Gosok Gigi" subtitle="Geser kiri–kanan untuk menyikat gigi"/>
-      {/* Progress */}
-      <div style={{padding:'14px 28px 0',zIndex:2,position:'relative'}}>
-        <div style={{background:'var(--border)',borderRadius:99,height:7,overflow:'hidden'}}>
-          <div style={{height:'100%',width:(prog*100)+'%',borderRadius:99,
-            background:'linear-gradient(90deg,var(--teal),var(--teal-soft))',
-            transition:'width .35s ease'}}/>
-        </div>
-        <div style={{display:'flex',justifyContent:'space-between',marginTop:5,
-          fontSize:11,fontWeight:700,color:'var(--text3)'}}>
-          <span>Mulai</span>
-          <span style={{color:'var(--teal)'}}>{strokes}/{NEEDED} usapan</span>
-          <span>Bersih ✓</span>
-        </div>
-      </div>
-      {/* Mouth */}
-      <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',
-        padding:'16px 28px',zIndex:2,position:'relative'}}>
-        <div style={{width:'100%',maxWidth:310}}>
-          <div style={{background:'#180808',borderRadius:'35% 35% 52% 52%/25% 25% 50% 50%',
-            padding:'10px 16px 26px',border:'2.5px solid #2a1212',
-            position:'relative',overflow:'hidden',marginBottom:8}}>
-            <div style={{height:6,marginBottom:5}}/>
-            {/* Upper teeth */}
-            <div style={{display:'flex',gap:3,justifyContent:'center',marginBottom:3}}>
-              {[0,1,2,3,4,5].map(i=>(
-                <div key={i} style={{flex:1,maxWidth:38,height:44,borderRadius:'5px 5px 10px 10px',
-                  background:tw,transition:'background .4s ease',
-                  backgroundImage:gleam?'linear-gradient(110deg,transparent 40%,rgba(255,255,255,.65) 50%,transparent 60%)':'none',
-                  backgroundSize:'200% 100%',animation:gleam?'shine .35s ease':'none',
-                  boxShadow:gleam?`0 0 16px ${tw}80`:'none'}}/>
-              ))}
-            </div>
-            <div style={{height:4,background:'rgba(160,30,30,.45)',borderRadius:4,marginBottom:3}}/>
-            {/* Lower teeth */}
-            <div style={{display:'flex',gap:3,justifyContent:'center'}}>
-              {[0,1,2,3,4].map(i=>(
-                <div key={i} style={{flex:1,maxWidth:30,height:26,borderRadius:'10px 10px 5px 5px',
-                  background:`hsl(200,${15+prog*40}%,${42+prog*20}%)`,transition:'background .4s ease'}}/>
-              ))}
-            </div>
-            {/* Face reaction */}
-            <div style={{position:'absolute',top:8,right:12,fontSize:22,
-              animation:'bounceIn .35s cubic-bezier(.34,1.56,.64,1)'}}>
-              {face}
-            </div>
-          </div>
-          {/* Brush track */}
-          <div ref={trackRef} onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}
-            style={{position:'relative',height:72,touchAction:'none',cursor:'grab'}}>
-            <div style={{position:'absolute',top:'50%',left:0,right:0,height:2,
-              background:'var(--border)',borderRadius:99,transform:'translateY(-50%)'}}/>
-            <div style={{position:'absolute',top:'50%',left:'8%',
-              width:((Math.max(0,brushX-8))/84*100)+'%',height:2,
-              background:'linear-gradient(90deg,var(--teal),transparent)',
-              transform:'translateY(-50%)',transition:'width .05s linear'}}/>
-            <div style={{
-              position:'absolute',left:brushX+'%',top:'50%',
-              transform:`translateX(-50%) translateY(-50%) rotate(${brushX>50?-22:22}deg)`,
-              fontSize:38,lineHeight:1,
-              filter:'drop-shadow(0 2px 10px rgba(62,207,184,.5))',
-              transition:txStart.current?'none':'left .2s ease',
-            }}>🪥</div>
-            {strokes===0&&(
-              <div style={{position:'absolute',bottom:0,left:0,right:0,display:'flex',
-                justifyContent:'space-between',padding:'0 6px',fontSize:20,
-                color:'var(--text3)',animation:'breathe 1.8s infinite'}}>
-                <span>←</span><span>→</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      {done&&(
-        <div style={{textAlign:'center',padding:'0 28px',paddingBottom:`calc(28px + var(--safe-bot))`,
-          zIndex:2,position:'relative',animation:'fadeUp .5s ease'}}>
-          <div style={{fontSize:40,marginBottom:4}}>✨✨✨</div>
-          <div style={{fontFamily:"'Baloo 2',cursive",fontSize:22,fontWeight:800,color:'var(--teal)'}}>
-            Gigi bersih & putih!
-          </div>
-        </div>
-      )}
-    </FadeIn>
-  );
+    el.addEventListener('click',tap);
+    el.addEventListener('pointerdown',function(e){e.preventDefault();},{passive:false});
+    el.addEventListener('pointerup',tap);
+    grid.appendChild(el);
+  });
 }
 
-/* ══════════════════════════════════════════════════════════
-   STEP 2 — PAJAMAS  (tap 3 items)
-══════════════════════════════════════════════════════════ */
-const PJ_ITEMS=[
-  {id:'shirt',  emoji:'👕', label:'Baju tidur',   color:'#A97FFF'},
-  {id:'pants',  emoji:'🩲', label:'Celana tidur',  color:'#7EA5FF'},
-  {id:'boneka', emoji:'🧸', label:'Boneka',          color:'#FFD166'},
-];
-
-function PajamasStep({onComplete}){
-  const[done,setDone]=useState(new Set());
-  const[ripples,setRipples]=useState({});
-  const complete=done.size>=PJ_ITEMS.length;
-
-  useEffect(()=>{if(complete){vibrate(100);setTimeout(onComplete,800);}},[complete,onComplete]);
-
-  const tap=useCallback((id,e)=>{
-    if(done.has(id))return;
-    vibrate(40);
-    const rect=e.currentTarget.getBoundingClientRect();
-    const t=e.changedTouches?.[0]||e;
-    setRipples(r=>({...r,[id]:{x:(t.clientX-rect.left)/rect.width*100,y:(t.clientY-rect.top)/rect.height*100}}));
-    setTimeout(()=>setRipples(r=>{const n={...r};delete n[id];return n;}),600);
-    setDone(p=>new Set([...p,id]));
-  },[done]);
-
-  return(
-    <FadeIn>
-      <StepHeader idx={1} title="Ganti Baju" subtitle="Ketuk setiap baju untuk memakainya"/>
-      <div style={{display:'flex',justifyContent:'center',padding:'14px 0 4px',zIndex:2,position:'relative'}}>
-        <div style={{width:70,height:70,borderRadius:'50%',background:'var(--card)',
-          border:'2px solid var(--border)',display:'flex',alignItems:'center',justifyContent:'center',
-          fontSize:38,
-          boxShadow:complete?'0 0 32px rgba(169,127,255,.4)':'none',
-          transition:'box-shadow .6s ease'}}>
-          {complete?'🌙':'👤'}
-        </div>
-      </div>
-      <div style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',
-        padding:'10px 28px',zIndex:2,position:'relative'}}>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,width:'100%',maxWidth:320}}>
-          {PJ_ITEMS.map(({id,emoji,label,color},i)=>{
-            const isDone=done.has(id), rip=ripples[id];
-            return(
-              <div key={id} onTouchEnd={e=>tap(id,e)} onClick={e=>tap(id,e)}
-                style={{
-                  gridColumn:i===2?'1/-1':'auto',
-                  background:isDone?`${color}18`:'var(--card)',
-                  border:`2px solid ${isDone?color:'var(--border)'}`,
-                  borderRadius:22,padding:'22px 14px',textAlign:'center',
-                  cursor:isDone?'default':'pointer',
-                  position:'relative',overflow:'hidden',
-                  transform:isDone?'scale(.97)':'scale(1)',
-                  transition:'all .4s cubic-bezier(.34,1.56,.64,1)',
-                  touchAction:'manipulation',
-                }}>
-                {rip&&(
-                  <div style={{position:'absolute',left:rip.x+'%',top:rip.y+'%',
-                    width:10,height:10,marginLeft:-5,marginTop:-5,borderRadius:'50%',
-                    background:color,opacity:.5,animation:'ringPulse .6s ease forwards',
-                    pointerEvents:'none'}}/>
-                )}
-                {!isDone&&<div style={{position:'absolute',inset:0,borderRadius:21,
-                  border:`1px solid ${color}25`,animation:'breathe 2.2s infinite'}}/>}
-                <div style={{fontSize:52,marginBottom:8,lineHeight:1,
-                  animation:isDone?'bounceIn .5s cubic-bezier(.34,1.56,.64,1)':'none',
-                  filter:isDone?`drop-shadow(0 0 14px ${color}80)`:'grayscale(.2)',
-                  transition:'filter .3s'}}>
-                  {isDone?'✅':emoji}
-                </div>
-                <div style={{fontSize:13,fontWeight:700,
-                  color:isDone?color:'var(--text2)',transition:'color .3s'}}>
-                  {isDone?'Sudah! ✓':label}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-      {complete&&(
-        <div style={{textAlign:'center',padding:'0 28px',paddingBottom:`calc(28px + var(--safe-bot))`,
-          zIndex:2,position:'relative',animation:'fadeUp .5s ease'}}>
-          <div style={{fontFamily:"'Baloo 2',cursive",fontSize:22,fontWeight:800,color:'#A97FFF'}}>
-            Siap untuk tidur! 🌙
-          </div>
-        </div>
-      )}
-    </FadeIn>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════
-   STEP 3 — DOA  (tap each line in order + speech)
-══════════════════════════════════════════════════════════ */
-const DOA=[
-  {arabic:'بِسْمِكَ اللَّهُمَّ',latin:'Bismika Allāhumma',
-   mean:'Dengan nama-Mu ya Allah',speech:'بسمك اللهم',color:'#FFD166'},
-  {arabic:'أَحْيَا وَأَمُوتُ',latin:'ahyā wa amūtu',
-   mean:'aku hidup dan aku mati',speech:'أحيا وأموت',color:'#A97FFF'},
-];
-
-function DoaStep({onComplete}){
-  const[tapped,setTapped]=useState(new Set());
-  const[playing,setPlaying]=useState(null);
-  const[waveKey,setWaveKey]=useState(0);
-  const complete=tapped.size>=DOA.length;
-
-  useEffect(()=>{if(complete){vibrate(100);setTimeout(onComplete,1100);}},[complete,onComplete]);
-
-  const tap=useCallback(i=>{
-    if(tapped.has(i)||playing!==null)return;
-    if(i>0&&!tapped.has(i-1))return;
-    vibrate(40);
-    setPlaying(i); setWaveKey(k=>k+1);
-    speak(DOA[i].speech);
-    setTimeout(()=>{setTapped(p=>new Set([...p,i]));setPlaying(null);},1700);
-  },[tapped,playing]);
-
-  return(
-    <FadeIn>
-      <StepHeader idx={2} title="Baca Doa" subtitle="Ketuk setiap baris doa"/>
-      <div style={{flex:1,display:'flex',flexDirection:'column',justifyContent:'center',
-        padding:'14px 28px',gap:12,zIndex:2,position:'relative'}}>
-        <div style={{textAlign:'center',marginBottom:4}}>
-          <span style={{display:'inline-flex',alignItems:'center',gap:8,
-            background:'rgba(255,209,102,.1)',border:'1px solid rgba(255,209,102,.2)',
-            borderRadius:99,padding:'6px 18px',fontSize:11,fontWeight:800,
-            color:'rgba(255,209,102,.8)',letterSpacing:1.5,textTransform:'uppercase'}}>
-            🌙 Doa Sebelum Tidur
-          </span>
-        </div>
-        {DOA.map(({arabic,latin,mean,color},i)=>{
-          const isDone=tapped.has(i), isActive=playing===i;
-          const locked=i>0&&!tapped.has(i-1);
-          return(
-            <div key={i} onTouchEnd={()=>tap(i)} onClick={()=>tap(i)}
-              style={{
-                background:isDone?`${color}18`:isActive?`${color}12`:'var(--card)',
-                border:`2px solid ${isDone?color:isActive?color+'88':'var(--border)'}`,
-                borderRadius:20,padding:'18px 20px',
-                cursor:locked?'default':'pointer',opacity:locked?.32:1,
-                position:'relative',overflow:'hidden',
-                transition:'all .35s cubic-bezier(.34,1.56,.64,1)',
-                touchAction:'manipulation',
-              }}>
-              {isActive&&<div style={{position:'absolute',inset:0,
-                background:`radial-gradient(circle at 50% 50%,${color}20 0%,transparent 70%)`,
-                animation:'breathe .6s infinite'}}/>}
-              <div style={{fontSize:28,fontFamily:'serif',fontWeight:700,textAlign:'right',
-                direction:'rtl',lineHeight:1.9,letterSpacing:.5,
-                color:isDone?color:isActive?color:'var(--text)',
-                textShadow:isDone?`0 0 22px ${color}60`:'none',
-                transition:'all .3s'}}>
-                {arabic}
-              </div>
-              <div style={{fontSize:13,fontWeight:600,color:'var(--text2)',
-                marginTop:3,fontStyle:'italic'}}>{latin}</div>
-              <div style={{fontSize:12,color:'var(--text3)',marginTop:2}}>{mean}</div>
-              <div style={{position:'absolute',top:14,right:16,fontSize:20,
-                animation:isDone?'checkPop .5s cubic-bezier(.34,1.56,.64,1)':'none'}}>
-                {isDone?'✅':isActive?'🔊':locked?'🔒':'👆'}
-              </div>
-            </div>
-          );
-        })}
-        {/* Sound wave */}
-        {playing!==null&&(
-          <div key={waveKey} style={{display:'flex',gap:4,justifyContent:'center',
-            alignItems:'flex-end',height:28}}>
-            {[2,3,5,4,6,4,3,2,4,5].map((h,i)=>(
-              <div key={i} style={{width:4,height:h*4+'px',background:'rgba(255,209,102,.6)',
-                borderRadius:99,animation:`wave ${.4+i*.1}s ${i*.06}s ease-in-out infinite`,
-                transformOrigin:'bottom'}}/>
-            ))}
-          </div>
-        )}
-      </div>
-      {complete&&(
-        <div style={{textAlign:'center',padding:'4px 28px',paddingBottom:`calc(24px + var(--safe-bot))`,
-          zIndex:2,position:'relative',animation:'fadeUp .5s ease'}}>
-          <div style={{fontSize:34,marginBottom:4}}>🤲</div>
-          <div style={{fontFamily:"'Baloo 2',cursive",fontSize:24,fontWeight:800,color:'var(--gold)'}}>
-            Aamiin...
-          </div>
-        </div>
-      )}
-    </FadeIn>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════
-   STEP 4 — DRAG BLANKET  (vertical drag up)
-══════════════════════════════════════════════════════════ */
-function SleepDrag({onComplete}){
-  const[prog,setProg]=useState(0);
-  const[drag,setDrag]=useState(false);
-  const[done,setDone]=useState(false);
-  const tyStart=useRef(null),progStart=useRef(0),bedRef=useRef(null);
-
-  useEffect(()=>{if(done){vibrate(120);setTimeout(onComplete,1200);}},[done,onComplete]);
-
-  const onTS=useCallback(e=>{
-    e.preventDefault(); tyStart.current=e.touches[0].clientY;
-    progStart.current=prog; setDrag(true);
-  },[prog]);
-  const onTM=useCallback(e=>{
-    e.preventDefault(); if(tyStart.current===null)return;
-    const dy=tyStart.current-e.touches[0].clientY;
-    const H=bedRef.current?.clientHeight||240;
-    const p=Math.max(0,Math.min(1,progStart.current+dy/(H*.6)));
-    setProg(p); if(p>=1&&!done) setDone(true);
-  },[done]);
-  const onTE=useCallback(e=>{
-    e.preventDefault(); setDrag(false); tyStart.current=null;
-    if(!done&&prog<.45) setProg(0);
-  },[done,prog]);
-
-  const blanketTop=86-prog*68;
-  const face=done?'😴':prog>.55?'🌙':prog>.2?'😌':'👁️';
-
-  return(
-    <FadeIn>
-      <StepHeader idx={3} title="Tarik Selimut"
-        subtitle={done?'Selamat tidur! 💤':'Geser ke atas untuk menarik selimut'}/>
-      <div ref={bedRef} onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}
-        style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',
-          padding:'14px 32px',touchAction:'none',zIndex:2,position:'relative'}}>
-        <div style={{width:'100%',maxWidth:290,position:'relative'}}>
-          {/* Bed */}
-          <div style={{background:'var(--card)',border:'2px solid var(--border)',
-            borderRadius:24,overflow:'hidden',position:'relative',height:250}}>
-            {/* Headboard */}
-            <div style={{position:'absolute',top:0,left:0,right:0,height:18,
-              background:'var(--border)',borderRadius:'22px 22px 0 0'}}/>
-            {/* Pillow */}
-            <div style={{position:'absolute',top:24,left:14,right:14,height:62,
-              background:'rgba(255,255,255,.055)',
-              border:'1.5px solid rgba(255,255,255,.1)',borderRadius:16,
-              display:'flex',alignItems:'center',justifyContent:'center'}}>
-              <div style={{fontSize:48,
-                transition:'all .5s ease',
-                filter:done?'drop-shadow(0 0 20px rgba(255,209,102,.55))':'none'}}>
-                {face}
-              </div>
-              {done&&[0,1,2].map(j=>(
-                <div key={j} style={{position:'absolute',
-                  right:(18+j*16)+'px',top:(2-j*7)+'px',
-                  fontSize:(12+j*5)+'px',fontWeight:800,fontFamily:"'Baloo 2',cursive",
-                  color:`rgba(100,180,255,${.35+j*.15})`,
-                  animation:`floatUp ${1.4+j*.4}s ${j*.35}s ease infinite`}}>
-                  Z
-                </div>
-              ))}
-            </div>
-            {/* Mattress */}
-            <div style={{position:'absolute',bottom:0,left:0,right:0,height:'55%',
-              background:'var(--surface)'}}/>
-            {/* Blanket */}
-            <div style={{position:'absolute',left:0,right:0,bottom:0,
-              top:`${blanketTop}%`,
-              transition:drag?'none':'top .4s cubic-bezier(.34,1.56,.64,1)'}}>
-              <div style={{position:'absolute',inset:0,
-                background:'linear-gradient(160deg,#1A3060 0%,#142850 30%,#1E376A 60%,#142850 100%)',
-                overflow:'hidden'}}>
-                <div style={{position:'absolute',inset:0,
-                  backgroundImage:'repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0px,rgba(255,255,255,.025) 12px,transparent 12px,transparent 24px)'}}/>
-                <div style={{position:'absolute',top:14,left:0,right:0,display:'flex',
-                  justifyContent:'space-evenly',fontSize:10,color:'rgba(180,200,255,.18)'}}>
-                  {['★','✦','★','✦','★','✦','★'].map((s,i)=><span key={i}>{s}</span>)}
-                </div>
-              </div>
-              {/* Fold edge */}
-              <div style={{position:'absolute',top:0,left:0,right:0,height:18,
-                background:'linear-gradient(135deg,#2A50A0,#1E3A80)',
-                borderRadius:'2px 2px 0 0',
-                borderBottom:'1px solid rgba(255,255,255,.08)'}}>
-                {!done&&(
-                  <div style={{position:'absolute',top:'50%',left:'50%',
-                    transform:'translate(-50%,-50%)',
-                    width:46,height:5,borderRadius:99,
-                    background:'rgba(126,165,255,.55)',
-                    boxShadow:'0 0 12px rgba(126,165,255,.4)'}}/>
-                )}
-              </div>
-            </div>
-          </div>
-          {/* Arrow hint */}
-          {!done&&prog<.12&&(
-            <div style={{position:'absolute',bottom:-38,left:'50%',
-              transform:'translateX(-50%)',textAlign:'center',
-              color:'var(--text3)',fontSize:13,fontWeight:700,
-              animation:'floatUp 1.7s ease infinite'}}>
-              <div style={{fontSize:22,marginBottom:2}}>↑</div>
-              <div>Seret ke atas</div>
-            </div>
-          )}
-        </div>
-      </div>
-    </FadeIn>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════
-   SLEEP MODE
-══════════════════════════════════════════════════════════ */
-function SleepMode(){
-  const[dim,setDim]=useState(0);
-  const[vis,setVis]=useState(false);
-
-  useEffect(()=>{
-    Lullaby.start(); requestWakeLock();
-    setTimeout(()=>setVis(true),700);
-    let d=0;
-    const iv=setInterval(()=>{d=Math.min(d+.0028,.74);setDim(d);},130);
-    return()=>{clearInterval(iv);Lullaby.stop();releaseWakeLock();};
-  },[]);
-
-  return(
-    <div style={{position:'absolute',inset:0,overflow:'hidden',
-      background:'linear-gradient(170deg,#02040A 0%,#030710 100%)'}}>
-      <StarField count={90} drift/>
-      {/* Dim overlay */}
-      <div style={{position:'absolute',inset:0,background:'#000',
-        opacity:dim,pointerEvents:'none',zIndex:2,transition:'opacity .5s ease'}}/>
-      {/* Content */}
-      <div style={{position:'absolute',inset:0,zIndex:3,
-        display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
-        gap:12,opacity:vis?1:0,transition:'opacity .9s ease'}}>
-        <div style={{fontSize:100,lineHeight:1,
-          animation:'moonFloat 4.5s ease-in-out infinite, moonGlow 3.5s ease-in-out infinite',
-          marginBottom:10}}>
-          🌙
-        </div>
-        <div style={{fontFamily:"'Baloo 2',cursive",fontSize:28,fontWeight:800,
-          color:'rgba(180,205,245,.6)',textAlign:'center',letterSpacing:.5}}>
-          Selamat tidur...
-        </div>
-        <div style={{fontSize:15,color:'rgba(90,112,160,.5)',fontStyle:'italic',textAlign:'center'}}>
-          Mimpi yang indah ya 💫
-        </div>
-        {/* ZZZ */}
-        <div style={{display:'flex',gap:14,marginTop:4}}>
-          {['Z','Z','Z'].map((z,i)=>(
-            <div key={i} style={{fontSize:(18+i*8)+'px',fontWeight:900,
-              fontFamily:"'Baloo 2',cursive",
-              color:`rgba(74,120,255,${.18+i*.14})`,
-              animation:`floatUp ${1.6+i*.5}s ${i*.4}s ease infinite`}}>
-              {z}
-            </div>
-          ))}
-        </div>
-        {/* Lullaby visualiser */}
-        <div style={{display:'flex',gap:5,alignItems:'flex-end',height:34,marginTop:10}}>
-          {[2,3,5,4,7,5,4,3,5,6].map((h,i)=>(
-            <div key={i} style={{width:4,
-              background:`rgba(62,207,184,${.18+i*.028})`,
-              borderRadius:99,height:h*4+'px',
-              animation:`wave ${.5+i*.12}s ${i*.08}s ease-in-out infinite`,
-              transformOrigin:'bottom'}}/>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════
-   STEP FLOW
-══════════════════════════════════════════════════════════ */
-function StepFlow({onDone}){
-  const[step,setStep]=useState(0);
-  const[leaving,setLeaving]=useState(false);
-
-  const advance=useCallback(()=>{
-    if(step<STEPS.length-1){
-      setLeaving(true);
-      setTimeout(()=>{setStep(s=>s+1);setLeaving(false);},360);
-    } else onDone();
-  },[step,onDone]);
-
-  const comps=[
-    <BrushTeeth   key="b" onComplete={advance}/>,
-    <PajamasStep  key="p" onComplete={advance}/>,
-    <DoaStep      key="d" onComplete={advance}/>,
-    <SleepDrag    key="s" onComplete={advance}/>,
+/* ══════════════════════════════════════════════════
+   STEP 3 — DUA
+══════════════════════════════════════════════════ */
+function buildDoa(wrap,done){
+  var duas=[
+    {ar:'بِسْمِكَ اللَّهُمَّ',la:'Bismika Allāhumma',me:'Dengan nama-Mu ya Allah',sp:'بسمك اللهم',co:'#FFD93D'},
+    {ar:'أَحْيَا وَأَمُوتُ',la:'ahyā wa amūtu',me:'aku hidup dan aku mati',sp:'أحيا وأموت',co:'#A97FFF'},
+    {ar:'اللَّهُمَّ أَمِتْنِي',la:'Allāhumma amitni',me:'Ya Allah matikanlah aku',sp:'اللهم أمتني',co:'#3ECFB8'},
   ];
+  var doneCnt=0, playing=false;
 
-  return(
-    <div style={{height:'100%',display:'flex',flexDirection:'column',
-      background:'linear-gradient(170deg,#04080F 0%,#080F1C 60%,#0A1228 100%)',
-      position:'relative'}}>
-      <StarField count={38}/>
-      <div style={{position:'relative',zIndex:1,display:'flex',flexDirection:'column',
-        height:'100%',
-        opacity:leaving?0:1,transform:leaving?'translateY(-18px)':'none',
-        transition:'all .36s ease'}}>
-        <StepDots current={step}/>
-        <div style={{flex:1,display:'flex',flexDirection:'column',
-          paddingBottom:`calc(18px + var(--safe-bot))`}}>
-          {comps[step]}
-        </div>
-      </div>
-    </div>
-  );
-}
+  wrap.innerHTML=
+    '<div class="shead">'
+      +'<div class="snum">Langkah 3 dari 4</div>'
+      +'<div class="stitle">🤲 Baca Doa</div>'
+      +'<div class="shint">Ketuk setiap baris — dengar &amp; ulangi!</div>'
+    +'</div>'
+    +'<div style="display:flex;justify-content:center;padding:6px 0;flex-shrink:0;">'
+      +'<div style="font-size:68px;animation:fl 3s ease-in-out infinite;">🤲</div>'
+    +'</div>'
+    +'<div style="text-align:center;padding:0 24px 8px;flex-shrink:0;">'
+      +'<span style="display:inline-block;background:rgba(255,217,61,.1);border:1px solid rgba(255,217,61,.3);'
+        +'border-radius:99px;padding:5px 16px;font-size:11px;font-weight:800;letter-spacing:2px;'
+        +'text-transform:uppercase;color:rgba(255,217,61,.8);">🌙 Doa Sebelum Tidur</span>'
+    +'</div>'
+    +'<div style="flex:1;overflow-y:auto;padding:0 24px 10px;" id="dualist"></div>'
+    +'<div id="dwavewrap" style="display:none;justify-content:center;align-items:flex-end;height:30px;gap:4px;padding-bottom:8px;flex-shrink:0;"></div>'
+    +'<div id="ddone" style="display:none;" class="donebanner">'
+      +'<div style="font-size:44px;">🤲</div>'
+      +'<div style="font-size:22px;font-weight:900;color:var(--gold);">Aamiin ya Rabb... 🌙</div>'
+    +'</div>';
 
-/* ══════════════════════════════════════════════════════════
-   HOME SCREEN
-══════════════════════════════════════════════════════════ */
-function HomeScreen({onStart}){
-  const[vis,setVis]=useState(false);
-  useEffect(()=>{
-    const t=setTimeout(()=>setVis(true),90);
-    requestWakeLock(); // keep screen on from the start
-    return()=>clearTimeout(t);
-  },[]);
+  /* Wave */
+  var ww=document.getElementById('dwavewrap');
+  [2,3,5,4,7,5,3,2,4,6].forEach(function(h,i){
+    var b=document.createElement('div');
+    b.style.cssText='width:5px;height:'+(h*3.5)+'px;background:rgba(255,217,61,.5);border-radius:99px;'
+      +'animation:wv '+(0.44+i*.1)+'s '+(i*.07)+'s ease-in-out infinite;transform-origin:bottom;';
+    ww.appendChild(b);
+  });
 
-  return(
-    <div style={{height:'100%',
-      background:'linear-gradient(170deg,#04080F 0%,#060C18 45%,#08101E 100%)',
-      display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
-      position:'relative',overflow:'hidden'}}>
-      <StarField count={70}/>
-      {/* Bottom horizon glow */}
-      <div style={{position:'absolute',bottom:0,left:0,right:0,height:'38%',
-        background:'radial-gradient(ellipse 80% 60% at 50% 120%,rgba(12,30,70,.55) 0%,transparent 70%)',
-        pointerEvents:'none'}}/>
-      {/* Content */}
-      <div style={{position:'relative',zIndex:2,textAlign:'center',
-        padding:`calc(28px + var(--safe-top)) 36px calc(28px + var(--safe-bot))`,
-        opacity:vis?1:0,transform:vis?'none':'translateY(30px)',
-        transition:'all .9s cubic-bezier(.34,1.56,.64,1)'}}>
-        <div style={{fontSize:102,lineHeight:1,marginBottom:24,
-          animation:'moonFloat 4.5s ease-in-out infinite, moonGlow 3.5s ease-in-out infinite'}}>
-          🌙
-        </div>
-        <div style={{fontSize:11,fontWeight:800,letterSpacing:3,textTransform:'uppercase',
-          color:'var(--text3)',marginBottom:10}}>
-          Baby Mo · Ritual Malam
-        </div>
-        <h1 style={{fontFamily:"'Baloo 2',cursive",fontSize:40,fontWeight:800,
-          lineHeight:1.15,color:'var(--text)',marginBottom:10,letterSpacing:-.5}}>
-          Waktunya<br/>Tidur! ✨
-        </h1>
-        <p style={{fontSize:15,color:'var(--text2)',lineHeight:1.6,
-          marginBottom:44,maxWidth:260,margin:'0 auto 44px'}}>
-          Yuk ikuti 4 langkah malam<br/>bersama Baby Mo 🌟
-        </p>
-        <button onClick={()=>{vibrate(60);onStart();}}
-          style={{background:'linear-gradient(135deg,#3A64F0,#6B94FF)',
-            border:'none',borderRadius:100,padding:'19px 52px',
-            fontFamily:"'Nunito',sans-serif",fontSize:19,fontWeight:900,
-            color:'#fff',cursor:'pointer',display:'block',margin:'0 auto',
-            boxShadow:'0 8px 36px rgba(74,120,255,.4),0 2px 8px rgba(0,0,0,.4)',
-            animation:'breathe 2.8s ease-in-out infinite',letterSpacing:.3,
-            WebkitTapHighlightColor:'transparent'}}>
-          Mulai Tidur 🌙
-        </button>
-        {/* Step previews */}
-        <div style={{display:'flex',gap:24,justifyContent:'center',marginTop:38}}>
-          {STEPS.map(({id,emoji,label},i)=>(
-            <div key={id} style={{textAlign:'center',opacity:.45,
-              animation:`fadeUp .5s ${.15+i*.1}s ease both`}}>
-              <div style={{fontSize:26,marginBottom:4}}>{emoji}</div>
-              <div style={{fontSize:10,fontWeight:700,color:'var(--text3)',letterSpacing:.5}}>
-                {label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+  var list=document.getElementById('dualist');
+  duas.forEach(function(d,i){
+    var el=document.createElement('div');
+    el.className='dualine'+(i>0?' locked':'');
+    el.id='dl'+i;
+    el.innerHTML='<div style="font-size:26px;font-family:serif;font-weight:700;text-align:right;'
+      +'direction:rtl;line-height:1.8;color:white;transition:color .3s;">'+d.ar+'</div>'
+      +'<div style="font-size:13px;font-weight:700;color:var(--text2);font-style:italic;margin-top:2px;">'+d.la+'</div>'
+      +'<div style="font-size:12px;color:var(--text3);margin-top:2px;">'+d.me+'</div>'
+      +'<div id="di'+i+'" style="position:absolute;top:14px;right:16px;font-size:22px;">'
+      +(i===0?'👆':'🔒')+'</div>';
 
-/* ══════════════════════════════════════════════════════════
-   SCREEN CROSSFADE
-══════════════════════════════════════════════════════════ */
-function Fade({id,children}){
-  const[show,setShow]=useState(false);
-  useEffect(()=>{const t=setTimeout(()=>setShow(true),40);return()=>clearTimeout(t);},[]);
-  return(
-    <div style={{position:'absolute',inset:0,opacity:show?1:0,
-      transition:'opacity .45s ease'}}>
-      {children}
-    </div>
-  );
-}
-
-/* ══════════════════════════════════════════════════════════
-   APP ROOT
-══════════════════════════════════════════════════════════ */
-function App(){
-  const[screen,setScreen]=useState('home');
-  // Android hardware back button
-  useEffect(()=>{
-    const handler=()=>{
-      if(screen==='steps'||screen==='sleep') setScreen('home');
-    };
-    document.addEventListener('backbutton',handler);
-    if(window.Capacitor?.Plugins?.App){
-      window.Capacitor.Plugins.App.addListener('backButton',handler);
+    function tap(){
+      if(el.classList.contains('locked')||playing)return;
+      playing=true; vib(45);
+      el.classList.add('active');
+      document.getElementById('di'+i).textContent='🔊';
+      document.getElementById('dwavewrap').style.display='flex';
+      speak(d.sp);
+      setTimeout(function(){
+        playing=false;
+        el.classList.remove('active'); el.classList.add('finished');
+        el.style.borderColor=d.co;
+        el.querySelector('div').style.color=d.co;
+        document.getElementById('di'+i).textContent='✅';
+        document.getElementById('dwavewrap').style.display='none';
+        doneCnt++;
+        if(doneCnt<duas.length){
+          var nx=document.getElementById('dl'+doneCnt);
+          nx.classList.remove('locked');
+          document.getElementById('di'+doneCnt).textContent='👆';
+        } else {
+          document.getElementById('ddone').style.display='block';
+          vib([60,30,60,30,100]);
+          setTimeout(done,1200);
+        }
+      },1850);
     }
-    return()=>document.removeEventListener('backbutton',handler);
-  },[screen]);
-
-  return(
-    <div style={{width:'100%',height:'100%',position:'relative',overflow:'hidden'}}>
-      {screen==='home'&&<Fade key="home"><HomeScreen onStart={()=>setScreen('steps')}/></Fade>}
-      {screen==='steps'&&<Fade key="steps"><StepFlow onDone={()=>setScreen('sleep')}/></Fade>}
-      {screen==='sleep'&&<Fade key="sleep"><SleepMode/></Fade>}
-    </div>
-  );
+    el.addEventListener('click',tap);
+    el.addEventListener('pointerup',function(e){if(e.pointerType!=='mouse')tap();});
+    list.appendChild(el);
+  });
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+/* ══════════════════════════════════════════════════
+   STEP 4 — DRAG BLANKET
+   POINTER EVENTS + setPointerCapture
+══════════════════════════════════════════════════ */
+function buildBlanket(wrap,done){
+  var prog=0, pdown=false, startY=0, startProg=0, finished=false;
+
+  wrap.innerHTML=
+    '<div class="shead">'
+      +'<div class="snum">Langkah 4 dari 4</div>'
+      +'<div class="stitle" id="bltitle">🌙 Tarik Selimut</div>'
+      +'<div class="shint" id="blhint">Seret selimut ke atas untuk tidur!</div>'
+    +'</div>'
+    +'<div id="dragzone" style="flex:1;display:flex;flex-direction:column;align-items:center;'
+      +'justify-content:center;padding:12px 24px 20px;touch-action:none;cursor:grab;">'
+      +'<div class="bedframe">'
+        +'<div style="position:absolute;top:0;left:0;right:0;height:20px;'
+          +'background:var(--card2);border-radius:24px 24px 0 0;"></div>'
+        +'<div style="position:absolute;top:26px;left:16px;right:16px;height:66px;'
+          +'background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);'
+          +'border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:visible;">'
+          +'<div id="blface" style="font-size:54px;transition:all .5s;">👁️</div>'
+          +'<div id="zzzwrap" style="display:none;position:absolute;right:6px;top:-16px;">'
+            +'<span style="font-size:13px;color:rgba(126,165,255,.38);animation:zf 1.5s 0s ease infinite;display:inline-block;">z</span>'
+            +'<span style="font-size:19px;color:rgba(126,165,255,.48);animation:zf 1.9s .4s ease infinite;display:inline-block;">z</span>'
+            +'<span style="font-size:26px;color:rgba(126,165,255,.55);animation:zf 2.3s .8s ease infinite;display:inline-block;">z</span>'
+          +'</div>'
+        +'</div>'
+        +'<div style="position:absolute;bottom:0;left:0;right:0;height:52%;background:rgba(8,18,36,.9);"></div>'
+        +'<div id="blkout" class="blkout" style="top:88%;">'
+          +'<div class="blkbody"><div class="blkpat"></div>'
+            +'<div style="position:absolute;top:14px;left:0;right:0;display:flex;'
+              +'justify-content:space-evenly;font-size:11px;color:rgba(200,220,255,.18);">'
+              +'<span>★</span><span>✦</span><span>★</span><span>✦</span><span>★</span><span>✦</span>'
+            +'</div>'
+          +'</div>'
+          +'<div class="blkfold"><div id="blkgrip" class="blkgrip"></div></div>'
+        +'</div>'
+      +'</div>'
+      +'<div id="blarrow" style="margin-top:22px;text-align:center;color:var(--text3);'
+        +'font-size:13px;font-weight:800;animation:fl 1.8s ease-in-out infinite;pointer-events:none;">'
+        +'<div style="font-size:30px;">↑</div><div>Seret ke atas</div>'
+      +'</div>'
+    +'</div>';
+
+  function updateFace(){
+    var f=document.getElementById('blface');
+    if(!f)return;
+    if(finished)f.textContent='😴';
+    else if(prog>.6)f.textContent='🌙';
+    else if(prog>.25)f.textContent='😌';
+    else f.textContent='👁️';
+    var blk=document.getElementById('blkout');
+    if(blk)blk.style.top=(88-prog*72)+'%';
+    if(prog>.07){var a=document.getElementById('blarrow');if(a)a.style.display='none';}
+  }
+
+  function onFinish(){
+    if(finished)return; finished=true; vib([80,40,120]);
+    var gr=document.getElementById('blkgrip'); if(gr)gr.style.display='none';
+    var zz=document.getElementById('zzzwrap'); if(zz)zz.style.display='block';
+    var t=document.getElementById('bltitle'); if(t)t.textContent='💤 Selamat Tidur!';
+    var h=document.getElementById('blhint'); if(h)h.textContent='Baby Mo sudah tidur... 🌙';
+    var f=document.getElementById('blface');
+    if(f){f.textContent='😴';f.style.filter='drop-shadow(0 0 18px rgba(255,217,61,.55))';}
+    setTimeout(done,1300);
+  }
+
+  var dz=document.getElementById('dragzone');
+
+  /* ★ POINTER EVENTS for blanket drag ★ */
+  dz.addEventListener('pointerdown',function(e){
+    pdown=true; startY=e.clientY; startProg=prog;
+    dz.setPointerCapture(e.pointerId);
+  });
+
+  dz.addEventListener('pointermove',function(e){
+    if(!pdown||finished)return;
+    var dy=startY-e.clientY;
+    var H=dz.clientHeight||260;
+    prog=Math.max(0,Math.min(1,startProg+dy/(H*.58)));
+    var blk=document.getElementById('blkout');
+    if(blk)blk.style.transition='none';
+    updateFace();
+    if(prog>=1)onFinish();
+  });
+
+  dz.addEventListener('pointerup',function(){
+    pdown=false;
+    if(!finished&&prog<.38){
+      prog=0;
+      var blk=document.getElementById('blkout');
+      if(blk)blk.style.transition='top .4s ease';
+      updateFace();
+    }
+  });
+  dz.addEventListener('pointercancel',function(){pdown=false;});
+
+  updateFace();
+}
+
+/* ══════════════════════════════════════════════════
+   SLEEP MODE
+══════════════════════════════════════════════════ */
+function startSleep(){
+  LUL.start();
+  var viz=document.getElementById('viz');
+  [2,3,5,4,7,5,4,3,5,7].forEach(function(h,i){
+    var b=document.createElement('div');
+    b.style.cssText='width:5px;height:'+(h*4)+'px;border-radius:99px;'
+      +'background:rgba(62,207,184,'+(0.18+i*.027)+');'
+      +'animation:wv '+(0.55+i*.13)+'s '+(i*.09)+'s ease-in-out infinite;transform-origin:bottom;';
+    viz.appendChild(b);
+  });
+  setTimeout(function(){document.getElementById('sleepcontent').style.opacity='1';},600);
+  var dim=document.getElementById('sleepdim'),d=0;
+  var iv=setInterval(function(){d=Math.min(d+.003,.78);dim.style.opacity=d;if(d>=.78)clearInterval(iv);},130);
+}
 </script>
 </body>
 </html>
